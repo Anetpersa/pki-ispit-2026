@@ -31,36 +31,23 @@
   }
 </section>
 
-<section class="why">
-  <h2>Zašto ToyBox?</h2>
-  <div class="why-grid">
-    <mat-card class="why-card">
-      <div class="icon-circle circle-primary">
-        <mat-icon>category</mat-icon>
-      </div>
-      <h3>Veliki izbor</h3>
-      <p>Preko 30 pažljivo odabranih igračaka za sve uzraste.</p>
-    </mat-card>
-    <mat-card class="why-card">
-      <div class="icon-circle circle-secondary">
-        <mat-icon>bolt</mat-icon>
-      </div>
-      <h3>Brza rezervacija</h3>
-      <p>Rezerviši igračku u samo par klikova.</p>
-    </mat-card>
-    <mat-card class="why-card">
-      <div class="icon-circle circle-tertiary">
-        <mat-icon>event_available</mat-icon>
-      </div>
-      <h3>Bez rizika</h3>
-      <p>Otkaži rezervaciju kad god zaželiš.</p>
-    </mat-card>
-    <mat-card class="why-card">
-      <div class="icon-circle circle-primary">
-        <mat-icon>star_rate</mat-icon>
-      </div>
-      <h3>Ocene roditelja</h3>
-      <p>Pročitaj iskustva drugih porodica.</p>
-    </mat-card>
-  </div>
-</section>
+@if (featuredToys().length > 0) {
+  <section class="featured">
+    <h2>⭐ Izdvojene igračke</h2>
+    <div class="featured-grid">
+      @for (toy of featuredToys(); track toy.toyId) {
+        <mat-card class="featured-card">
+          <img mat-card-image [src]="imageBaseUrl + toy.imageUrl" [alt]="toy.name" />
+          <mat-card-content>
+            <h3>{{ toy.name }}</h3>
+            <p class="age-range">Uzrast: {{ toy.ageGroup.name }}</p>
+            <p class="price">{{ toy.price }} RSD</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <a mat-button routerLink="/igracke">Detalji</a>
+          </mat-card-actions>
+        </mat-card>
+      }
+    </div>
+  </section>
+}

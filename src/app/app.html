@@ -3,8 +3,12 @@
     <span class="brand">Toy Box</span>
     <span class="spacer"></span>
     <nav>
-      <a mat-button routerLink="/" routerLinkActive="active-link">
+      <a mat-button routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">
         <mat-icon>home</mat-icon>
+        Početna
+      </a>
+      <a mat-button routerLink="/igracke" routerLinkActive="active-link">
+        <mat-icon>toys</mat-icon>
         Igračke
       </a>
       <a mat-button routerLink="/cart" routerLinkActive="active-link">
@@ -24,9 +28,5 @@
 <footer class="site-footer">
   <div class="footer-inner">
     <span>© 2026 ToyBox</span>
-    <nav>
-      <a routerLink="/">Početna</a>
-      <a routerLink="/igracke">Igračke</a>
-    </nav>
   </div>
 </footer>

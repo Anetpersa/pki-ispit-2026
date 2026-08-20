@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { ToyModel } from '../../models/toy.model';
 import { ToyTypeModel } from '../../models/toy-type.model';
 import { ToyService } from '../../services/toy.service';
 
@@ -33,9 +34,12 @@ const TYPE_ICONS: Record<number, string> = {
 })
 export class Home implements OnInit {
   categories = signal<CategoryDisplay[]>([]);
+  featuredToys = signal<ToyModel[]>([]);
+  readonly imageBaseUrl = 'https://toy.pequla.com';
 
   ngOnInit() {
     this.loadCategories();
+    this.loadFeatured();
   }
 
   async loadCategories() {
@@ -50,6 +54,15 @@ export class Home implements OnInit {
       );
     } catch {
       this.categories.set([]);
+    }
+  }
+
+  async loadFeatured() {
+    try {
+      const response = await ToyService.getToys();
+      this.featuredToys.set(response.data.slice(0, 6));
+    } catch {
+      this.featuredToys.set([]);
     }
   }
 }
