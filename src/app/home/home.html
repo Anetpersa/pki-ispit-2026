@@ -1,0 +1,24 @@
+<div class="home">
+  <h1>Igračke</h1>
+
+  @if (loading()) {
+    <p>Učitavanje...</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (!loading() && !error()) {
+    <div class="toy-list">
+      @for (toy of toys(); track toy.toyId) {
+        <div class="toy-card">
+          <h3>{{ toy.name }}</h3>
+          <p>{{ toy.description }}</p>
+          <p>Uzrast: {{ toy.ageGroup.name }}</p>
+          <p>Cena: {{ toy.price }} RSD</p>
+        </div>
+      }
+    </div>
+  }
+</div>
