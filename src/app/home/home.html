@@ -15,6 +15,22 @@
   </div>
 </section>
 
+<section id="kategorije" class="categories">
+  <h2>Istraži po kategoriji</h2>
+  @if (categories().length > 0) {
+    <div class="category-grid">
+      @for (cat of categories(); track cat.typeId) {
+        <a class="category-item" routerLink="/igracke">
+          <div class="category-circle">
+            <mat-icon>{{ cat.icon }}</mat-icon>
+          </div>
+          <span>{{ cat.name }}</span>
+        </a>
+      }
+    </div>
+  }
+</section>
+
 <section class="why">
   <h2>Zašto ToyBox?</h2>
   <div class="why-grid">
