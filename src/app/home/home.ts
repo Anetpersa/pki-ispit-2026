@@ -1,10 +1,11 @@
 import { Component, OnInit, signal } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
 import { ToyModel } from '../../models/toy.model';
 import { ToyService } from '../../services/toy.service';
 
 @Component({
   selector: 'app-home',
-  imports: [],
+  imports: [MatCardModule],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -12,6 +13,8 @@ export class Home implements OnInit {
   toys = signal<ToyModel[]>([]);
   loading = signal(true);
   error = signal<string | null>(null);
+
+  readonly imageBaseUrl = 'https://toy.pequla.com';
 
   ngOnInit() {
     this.loadToys();

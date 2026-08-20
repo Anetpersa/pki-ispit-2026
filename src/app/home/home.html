@@ -10,14 +10,19 @@
   }
 
   @if (!loading() && !error()) {
-    <div class="toy-list">
+    <div class="toy-grid">
       @for (toy of toys(); track toy.toyId) {
-        <div class="toy-card">
-          <h3>{{ toy.name }}</h3>
-          <p>{{ toy.description }}</p>
-          <p>Uzrast: {{ toy.ageGroup.name }}</p>
-          <p>Cena: {{ toy.price }} RSD</p>
-        </div>
+        <mat-card class="toy-card">
+          <img mat-card-image [src]="imageBaseUrl + toy.imageUrl" [alt]="toy.name" />
+          <mat-card-header>
+            <mat-card-title>{{ toy.name }}</mat-card-title>
+            <mat-card-subtitle>{{ toy.type.name }} · {{ toy.ageGroup.name }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <p>{{ toy.description }}</p>
+            <p class="price">{{ toy.price }} RSD</p>
+          </mat-card-content>
+        </mat-card>
       }
     </div>
   }
