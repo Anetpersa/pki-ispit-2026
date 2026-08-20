@@ -1,2 +1,22 @@
+<mat-toolbar color="primary">
+  <div class="toolbar-inner">
+    <span class="brand">Toy Box</span>
+    <span class="spacer"></span>
+    <nav>
+      <a mat-button routerLink="/" routerLinkActive="active-link">
+        <mat-icon>home</mat-icon>
+        Igračke
+      </a>
+      <a mat-button routerLink="/cart" routerLinkActive="active-link">
+        <mat-icon>shopping_cart</mat-icon>
+        Korpa
+      </a>
+      <a mat-button routerLink="/login" routerLinkActive="active-link">
+        <mat-icon>person</mat-icon>
+        Prijava
+      </a>
+    </nav>
+  </div>
+</mat-toolbar>
 
 <router-outlet />

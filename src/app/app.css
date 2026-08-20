@@ -1,0 +1,31 @@
+mat-toolbar {
+  display: flex;
+}
+
+.toolbar-inner {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+nav {
+  display: flex;
+  gap: 4px;
+}
+
+.active-link {
+  font-weight: 700;
+}

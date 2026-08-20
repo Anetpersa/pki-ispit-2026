@@ -1,15 +1,16 @@
 .home {
+  max-width: 1400px;
+  margin: 0 auto;
   padding: 24px;
 }
 
 .toy-grid {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 16px;
 }
 
 .toy-card {
-  width: 280px;
   display: flex;
   flex-direction: column;
 }
