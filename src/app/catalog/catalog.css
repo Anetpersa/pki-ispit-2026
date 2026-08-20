@@ -1,0 +1,26 @@
+.catalog {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.toy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.toy-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.toy-card img {
+  height: 180px;
+  object-fit: cover;
+}
+
+.price {
+  font-weight: 600;
+  color: var(--mat-sys-secondary);
+}
