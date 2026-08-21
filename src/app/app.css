@@ -36,10 +36,6 @@ mat-toolbar mat-icon {
   display: block;
 }
 
-.spacer {
-  flex: 1 1 auto;
-}
-
 nav {
   display: flex;
   align-items: center;
@@ -48,6 +44,41 @@ nav {
 
 .active-link {
   font-weight: 700;
+}
+
+.toolbar-search {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  padding: 6px 16px;
+  max-width: 380px;
+  width: 100%;
+  margin-right: 20px;
+}
+
+.toolbar-search mat-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+  color: var(--mat-sys-on-primary);
+  opacity: 0.75;
+}
+
+.toolbar-search input {
+  border: none;
+  background: transparent;
+  outline: none;
+  color: var(--mat-sys-on-primary);
+  font-size: 14px;
+  width: 100%;
+}
+
+.toolbar-search input::placeholder {
+  color: var(--mat-sys-on-primary);
+  opacity: 0.6;
 }
 
 .user-menu-trigger {

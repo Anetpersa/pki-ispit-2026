@@ -19,7 +19,11 @@
         Korpa
       </a>
     </nav>
-    <span class="spacer"></span>
+
+    <div class="toolbar-search">
+      <mat-icon>search</mat-icon>
+      <input type="text" placeholder="Pretraži igračke..." aria-label="Pretraži igračke" />
+    </div>
 
     @if (currentUser()) {
     <button mat-button class="user-menu-trigger" [matMenuTriggerFor]="userMenu">
