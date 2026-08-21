@@ -3,9 +3,9 @@ import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { ToyModel } from '../../models/toy.model';
-import { ToyTypeModel } from '../../models/toy-type.model';
-import { ToyService } from '../../services/toy.service';
+import { ToyModel } from '../../../models/toy.model';
+import { ToyTypeModel } from '../../../models/toy-type.model';
+import { ToyService } from '../../../services/toy.service';
 
 interface CategoryDisplay {
   typeId: number;

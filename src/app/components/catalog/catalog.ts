@@ -6,10 +6,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
-import { ToyModel } from '../../models/toy.model';
-import { AgeGroupModel } from '../../models/age-group.model';
-import { ToyTypeModel } from '../../models/toy-type.model';
-import { ToyService } from '../../services/toy.service';
+import { ToyModel } from '../../../models/toy.model';
+import { AgeGroupModel } from '../../../models/age-group.model';
+import { ToyTypeModel } from '../../../models/toy-type.model';
+import { ToyService } from '../../../services/toy.service';
 
 @Component({
   selector: 'app-catalog',

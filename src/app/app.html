@@ -1,7 +1,10 @@
 <mat-toolbar color="primary">
   <div class="toolbar-inner">
-    <span class="brand">Toy Box</span>
-    <span class="spacer"></span>
+    <a class="brand" routerLink="/">
+      <img src="toybox-logo.png" alt="ToyBox logo" class="brand-logo" />
+      <span>ToyBox</span>
+    </a>
+
     <nav>
       <a mat-button routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">
         <mat-icon>home</mat-icon>
@@ -15,11 +18,31 @@
         <mat-icon>shopping_cart</mat-icon>
         Korpa
       </a>
-      <a mat-button routerLink="/login" routerLinkActive="active-link">
-        <mat-icon>person</mat-icon>
-        Prijava
-      </a>
     </nav>
+    <span class="spacer"></span>
+
+    @if (currentUser()) {
+    <button mat-button class="user-menu-trigger" [matMenuTriggerFor]="userMenu">
+      <span class="user-name">{{ currentUser()!.firstName }}</span>
+      <mat-icon>account_circle</mat-icon>
+      <mat-icon class="dropdown-caret">arrow_drop_down</mat-icon>
+    </button>
+    <mat-menu #userMenu="matMenu">
+      <a mat-menu-item routerLink="/profil">
+        <mat-icon>person</mat-icon>
+        <span>Profil</span>
+      </a>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Odjava</span>
+      </button>
+    </mat-menu>
+    } @else {
+    <a mat-button routerLink="/login" routerLinkActive="active-link">
+      <mat-icon>person</mat-icon>
+      Prijava
+    </a>
+    }
   </div>
 </mat-toolbar>
 

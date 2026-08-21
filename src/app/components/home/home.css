@@ -51,6 +51,15 @@
   gap: 12px;
 }
 
+.brand-mark {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--mat-sys-primary);
+  margin-bottom: -4px;
+}
+
 .badge {
   display: inline-block;
   background: var(--mat-sys-secondary-container);

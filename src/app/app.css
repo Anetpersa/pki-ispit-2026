@@ -20,8 +20,20 @@ mat-toolbar mat-icon {
 }
 
 .brand {
-  font-size: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  font-size: 20px;
   font-weight: 700;
+  color: var(--mat-sys-on-primary);
+  margin-right: 24px;
+}
+
+.brand-logo {
+  height: 32px;
+  width: auto;
+  display: block;
 }
 
 .spacer {
@@ -30,11 +42,35 @@ mat-toolbar mat-icon {
 
 nav {
   display: flex;
+  align-items: center;
   gap: 4px;
 }
 
 .active-link {
   font-weight: 700;
+}
+
+.user-menu-trigger {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.user-name {
+  order: 1;
+  font-weight: 700;
+  color: var(--mat-sys-on-primary);
+  margin-right: 10px;
+}
+
+.user-menu-trigger mat-icon:not(.dropdown-caret) {
+  order: 2;
+  margin-right: 2;
+}
+
+.dropdown-caret {
+  order: 3;
+  margin-left: -6px;
 }
 
 :host {

@@ -1,0 +1,39 @@
+<div class="auth-page">
+  <mat-card class="auth-card">
+    <h1>Registracija</h1>
+
+    <form (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Ime</mat-label>
+        <input matInput [ngModel]="firstName()" (ngModelChange)="firstName.set($event)" name="firstName" required />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Prezime</mat-label>
+        <input matInput [ngModel]="lastName()" (ngModelChange)="lastName.set($event)" name="lastName" required />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" [ngModel]="email()" (ngModelChange)="email.set($event)" name="email" required />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Lozinka</mat-label>
+        <input matInput type="password" [ngModel]="password()" (ngModelChange)="password.set($event)" name="password" required />
+      </mat-form-field>
+
+      @if (error()) {
+        <p class="error">{{ error() }}</p>
+      }
+
+      <button mat-raised-button color="primary" type="submit" class="full-width" [disabled]="loading()">
+        {{ loading() ? 'Registracija...' : 'Registruj se' }}
+      </button>
+    </form>
+
+    <p class="switch-link">
+      Već imate nalog? <a routerLink="/login">Prijavite se</a>
+    </p>
+  </mat-card>
+</div>
