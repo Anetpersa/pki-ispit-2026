@@ -7,184 +7,185 @@ const CURRENT_USER_KEY = 'toybox_current_user';
 const RESERVATIONS_KEY = 'toybox_reservations';
 
 async function hashPassword(password: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
 function generateId(): string {
-  return crypto.randomUUID();
+    return crypto.randomUUID();
 }
 
 function getUsers(): UserModel[] {
-  const raw = localStorage.getItem(USERS_KEY);
-  return raw ? JSON.parse(raw) : [];
+    const raw = localStorage.getItem(USERS_KEY);
+    return raw ? JSON.parse(raw) : [];
 }
 
 function saveUsers(users: UserModel[]): void {
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
 }
 
 function getReservationsRaw(): ReservationModel[] {
-  const raw = localStorage.getItem(RESERVATIONS_KEY);
-  return raw ? JSON.parse(raw) : [];
+    const raw = localStorage.getItem(RESERVATIONS_KEY);
+    return raw ? JSON.parse(raw) : [];
 }
 
 function saveReservations(reservations: ReservationModel[]): void {
-  localStorage.setItem(RESERVATIONS_KEY, JSON.stringify(reservations));
+    localStorage.setItem(RESERVATIONS_KEY, JSON.stringify(reservations));
 }
 
 export class UserService {
-  static currentUser = signal<UserModel | null>(UserService.loadCurrentUserFromStorage());
+    static currentUser = signal<UserModel | null>(UserService.loadCurrentUserFromStorage());
 
-  private static loadCurrentUserFromStorage(): UserModel | null {
-    const raw = localStorage.getItem(CURRENT_USER_KEY);
-    return raw ? JSON.parse(raw) : null;
-  }
-
-  static async signup(
-    email: string,
-    password: string,
-    firstName: string,
-    lastName: string,
-    phone: string,
-    address: string,
-    favoriteToyTypes: number[] = []
-  ): Promise<UserModel> {
-    const users = getUsers();
-    const existing = users.find((u) => u.email.toLowerCase() === email.toLowerCase());
-    if (existing) {
-      throw new Error('Korisnik sa ovim email-om već postoji.');
+    private static loadCurrentUserFromStorage(): UserModel | null {
+        const raw = localStorage.getItem(CURRENT_USER_KEY);
+        return raw ? JSON.parse(raw) : null;
     }
 
-    const passwordHash = await hashPassword(password);
-    const newUser: UserModel = {
-      userId: generateId(),
-      email,
-      passwordHash,
-      firstName,
-      lastName,
-      phone,
-      address,
-      favoriteToyTypes,
-    };
+    static async signup(
+        email: string,
+        password: string,
+        firstName: string,
+        lastName: string,
+        phone: string,
+        address: string,
+        favoriteToyTypes: number[] = []
+    ): Promise<UserModel> {
+        const users = getUsers();
+        const existing = users.find((u) => u.email.toLowerCase() === email.toLowerCase());
+        if (existing) {
+            throw new Error('Korisnik sa ovim email-om već postoji.');
+        }
 
-    users.push(newUser);
-    saveUsers(users);
-    UserService.setCurrentUser(newUser);
-    return newUser;
-  }
+        const passwordHash = await hashPassword(password);
+        const newUser: UserModel = {
+            userId: generateId(),
+            email,
+            passwordHash,
+            firstName,
+            lastName,
+            phone,
+            address,
+            favoriteToyTypes,
+        };
 
-  static async login(email: string, password: string): Promise<UserModel> {
-    const users = getUsers();
-    const user = users.find((u) => u.email.toLowerCase() === email.toLowerCase());
-    if (!user) {
-      throw new Error('Pogrešan email ili lozinka.');
+        users.push(newUser);
+        saveUsers(users);
+        UserService.setCurrentUser(newUser);
+        return newUser;
     }
 
-    const passwordHash = await hashPassword(password);
-    if (passwordHash !== user.passwordHash) {
-      throw new Error('Pogrešan email ili lozinka.');
+    static async login(email: string, password: string): Promise<UserModel> {
+        const users = getUsers();
+        const user = users.find((u) => u.email.toLowerCase() === email.toLowerCase());
+        if (!user) {
+            throw new Error('Pogrešan email ili lozinka.');
+        }
+
+        const passwordHash = await hashPassword(password);
+        if (passwordHash !== user.passwordHash) {
+            throw new Error('Pogrešan email ili lozinka.');
+        }
+
+        UserService.setCurrentUser(user);
+        return user;
     }
 
-    UserService.setCurrentUser(user);
-    return user;
-  }
-
-  static logout(): void {
-    localStorage.removeItem(CURRENT_USER_KEY);
-    UserService.currentUser.set(null);
-  }
-
-  private static setCurrentUser(user: UserModel): void {
-    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
-    UserService.currentUser.set(user);
-  }
-
-  static getCurrentUser(): UserModel | null {
-    return UserService.currentUser();
-  }
-
-  static updateProfile(
-    userId: string,
-    updates: Partial<Pick<UserModel, 'firstName' | 'lastName' | 'phone' | 'address' | 'favoriteToyTypes'>>
-  ): UserModel {
-    const users = getUsers();
-    const user = users.find((u) => u.userId === userId);
-    if (!user) {
-      throw new Error('Korisnik nije pronađen.');
+    static logout(): void {
+        localStorage.removeItem(CURRENT_USER_KEY);
+        UserService.currentUser.set(null);
     }
 
-    Object.assign(user, updates);
-    saveUsers(users);
-
-    if (UserService.getCurrentUser()?.userId === userId) {
-      UserService.setCurrentUser(user);
+    private static setCurrentUser(user: UserModel): void {
+        localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+        UserService.currentUser.set(user);
     }
 
-    return user;
-  }
-
-  static createReservation(
-    toyId: number,
-    toyName: string,
-    toyPrice: number,
-    toyImageUrl: string
-  ): ReservationModel {
-    const user = UserService.getCurrentUser();
-    if (!user) {
-      throw new Error('Morate biti prijavljeni da biste napravili rezervaciju.');
+    static getCurrentUser(): UserModel | null {
+        return UserService.currentUser();
     }
 
-    const reservations = getReservationsRaw();
-    const newReservation: ReservationModel = {
-      reservationId: generateId(),
-      userId: user.userId,
-      toyId,
-      toyName,
-      toyPrice,
-      toyImageUrl,
-      status: 'rezervisano',
-      reservationDate: new Date().toISOString(),
-    };
+    static updateProfile(
+        userId: string,
+        updates: Partial<Pick<UserModel, 'firstName' | 'lastName' | 'phone' | 'address' | 'favoriteToyTypes'>>
+    ): UserModel {
+        const users = getUsers();
+        const user = users.find((u) => u.userId === userId);
+        if (!user) {
+            throw new Error('Korisnik nije pronađen.');
+        }
 
-    reservations.push(newReservation);
-    saveReservations(reservations);
-    return newReservation;
-  }
+        Object.assign(user, updates);
+        saveUsers(users);
 
-  static getReservationsForUser(userId: string): ReservationModel[] {
-    return getReservationsRaw().filter((r) => r.userId === userId);
-  }
+        if (UserService.getCurrentUser()?.userId === userId) {
+            UserService.setCurrentUser(user);
+        }
 
-  static updateReservationStatus(reservationId: string, status: ReservationStatus): void {
-    const reservations = getReservationsRaw();
-    const reservation = reservations.find((r) => r.reservationId === reservationId);
-    if (!reservation) {
-      throw new Error('Rezervacija nije pronađena.');
+        return user;
     }
 
-    reservation.status = status;
-    saveReservations(reservations);
-  }
+    static createReservation(
+        toyId: number,
+        toyName: string,
+        toyPrice: number,
+        toyImageUrl: string
+    ): ReservationModel {
+        const user = UserService.getCurrentUser();
+        if (!user) {
+            throw new Error('Morate biti prijavljeni da biste napravili rezervaciju.');
+        }
 
-  static deleteReservation(reservationId: string): void {
-    const reservations = getReservationsRaw().filter((r) => r.reservationId !== reservationId);
-    saveReservations(reservations);
-  }
+        const reservations = getReservationsRaw();
+        const newReservation: ReservationModel = {
+            reservationId: generateId(),
+            userId: user.userId,
+            toyId,
+            toyName,
+            toyPrice,
+            toyImageUrl,
+            status: 'rezervisano',
+            reservationDate: new Date().toISOString(),
+        };
 
-  static rateReservation(reservationId: string, rating: number): void {
-    const reservations = getReservationsRaw();
-    const reservation = reservations.find((r) => r.reservationId === reservationId);
-    if (!reservation) {
-      throw new Error('Rezervacija nije pronađena.');
+        reservations.push(newReservation);
+        saveReservations(reservations);
+        return newReservation;
     }
-    if (reservation.status !== 'pristiglo') {
-      throw new Error('Ocenjivanje je moguće samo za rezervacije sa statusom "pristiglo".');
+
+    static getReservationsForUser(userId: string): ReservationModel[] {
+        return getReservationsRaw().filter((r) => r.userId === userId);
     }
 
-    reservation.rating = rating;
-    saveReservations(reservations);
-  }
+    static updateReservationStatus(reservationId: string, status: ReservationStatus): void {
+        const reservations = getReservationsRaw();
+        const reservation = reservations.find((r) => r.reservationId === reservationId);
+        if (!reservation) {
+            throw new Error('Rezervacija nije pronađena.');
+        }
+
+        reservation.status = status;
+        saveReservations(reservations);
+    }
+
+    static deleteReservation(reservationId: string): void {
+        const reservations = getReservationsRaw().filter((r) => r.reservationId !== reservationId);
+        saveReservations(reservations);
+    }
+
+    static rateReservation(reservationId: string, rating: number): void {
+        const reservations = getReservationsRaw();
+        const reservation = reservations.find((r) => r.reservationId === reservationId);
+        if (!reservation) {
+            throw new Error('Rezervacija nije pronađena.');
+        }
+        if (reservation.status !== 'pristiglo') {
+            throw new Error('Ocenjivanje je moguće samo za rezervacije sa statusom "pristiglo".');
+        }
+
+        reservation.rating = rating;
+        saveReservations(reservations);
+    }
+}

@@ -81,6 +81,27 @@ nav {
   opacity: 0.6;
 }
 
+.auth-links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.auth-links a {
+  color: var(--mat-sys-on-primary);
+  text-decoration: none;
+}
+
+.auth-links a:hover {
+  text-decoration: underline;
+}
+
+.auth-separator {
+  color: var(--mat-sys-on-primary);
+  opacity: 0.5;
+}
+
 .user-menu-trigger {
   display: flex;
   align-items: center;

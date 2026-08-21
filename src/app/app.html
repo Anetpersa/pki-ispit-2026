@@ -38,10 +38,12 @@
       </button>
     </mat-menu>
     } @else {
-    <a mat-button routerLink="/login" routerLinkActive="active-link">
+    <div class="auth-links">
       <mat-icon>person</mat-icon>
-      Prijava
-    </a>
+      <a routerLink="/login">Prijava</a>
+      <span class="auth-separator">/</span>
+      <a routerLink="/signup">Registracija</a>
+    </div>
     }
   </div>
 </mat-toolbar>

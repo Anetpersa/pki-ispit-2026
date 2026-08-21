@@ -24,6 +24,8 @@ export class Signup {
   firstName = signal('');
   lastName = signal('');
   email = signal('');
+  phone = signal('');
+  address = signal('');
   password = signal('');
   error = signal<string | null>(null);
   loading = signal(false);
@@ -34,7 +36,14 @@ export class Signup {
     this.error.set(null);
     this.loading.set(true);
     try {
-      await UserService.signup(this.email(), this.password(), this.firstName(), this.lastName());
+      await UserService.signup(
+        this.email(),
+        this.password(),
+        this.firstName(),
+        this.lastName(),
+        this.phone(),
+        this.address()
+      );
       this.router.navigateByUrl('/');
     } catch (err) {
       this.error.set(err instanceof Error ? err.message : 'Registracija nije uspela.');
