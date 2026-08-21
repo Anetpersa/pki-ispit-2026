@@ -48,7 +48,10 @@ export class UserService {
     email: string,
     password: string,
     firstName: string,
-    lastName: string
+    lastName: string,
+    phone: string,
+    address: string,
+    favoriteToyTypes: number[] = []
   ): Promise<UserModel> {
     const users = getUsers();
     const existing = users.find((u) => u.email.toLowerCase() === email.toLowerCase());
@@ -63,6 +66,9 @@ export class UserService {
       passwordHash,
       firstName,
       lastName,
+      phone,
+      address,
+      favoriteToyTypes,
     };
 
     users.push(newUser);
@@ -99,6 +105,26 @@ export class UserService {
 
   static getCurrentUser(): UserModel | null {
     return UserService.currentUser();
+  }
+
+  static updateProfile(
+    userId: string,
+    updates: Partial<Pick<UserModel, 'firstName' | 'lastName' | 'phone' | 'address' | 'favoriteToyTypes'>>
+  ): UserModel {
+    const users = getUsers();
+    const user = users.find((u) => u.userId === userId);
+    if (!user) {
+      throw new Error('Korisnik nije pronađen.');
+    }
+
+    Object.assign(user, updates);
+    saveUsers(users);
+
+    if (UserService.getCurrentUser()?.userId === userId) {
+      UserService.setCurrentUser(user);
+    }
+
+    return user;
   }
 
   static createReservation(
@@ -162,4 +188,3 @@ export class UserService {
     reservation.rating = rating;
     saveReservations(reservations);
   }
-}

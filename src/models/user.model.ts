@@ -4,4 +4,7 @@ export interface UserModel {
   passwordHash: string;
   firstName: string;
   lastName: string;
+  phone: string;
+  address: string;
+  favoriteToyTypes: number[];
 }
