@@ -1,17 +1,97 @@
-<div class="home">
+<div class="catalog">
   <h1>Igračke</h1>
 
   @if (loading()) {
-    <p>Učitavanje...</p>
+  <p>Učitavanje...</p>
   }
 
   @if (error()) {
-    <p class="error">{{ error() }}</p>
+  <p class="error">{{ error() }}</p>
   }
 
   @if (!loading() && !error()) {
-    <div class="toy-grid">
-      @for (toy of toys(); track toy.toyId) {
+  <div class="catalog-layout">
+    <aside class="sidebar">
+      <h2>Filteri</h2>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Pretraga</mat-label>
+        <input matInput [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)"
+          placeholder="Naziv ili opis..." />
+      </mat-form-field>
+
+      <div class="filter-group">
+        <h3>Tip</h3>
+        @for (type of types(); track type.typeId) {
+        <mat-checkbox [checked]="selectedTypeIds().has(type.typeId)" (change)="toggleType(type.typeId)">
+          {{ type.name }}
+        </mat-checkbox>
+        }
+      </div>
+
+      <div class="filter-group">
+        <h3>Uzrasna grupa</h3>
+        @for (ageGroup of ageGroups(); track ageGroup.ageGroupId) {
+        <mat-checkbox [checked]="selectedAgeGroupIds().has(ageGroup.ageGroupId)"
+          (change)="toggleAgeGroup(ageGroup.ageGroupId)">
+          {{ ageGroup.name }}
+        </mat-checkbox>
+        }
+      </div>
+
+      <div class="filter-group">
+        <h3>Ciljna grupa</h3>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-select [ngModel]="selectedTargetGroup()" (ngModelChange)="selectedTargetGroup.set($event)">
+            @for (option of targetGroupOptions; track option.value) {
+            <mat-option [value]="option.value">{{ option.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="filter-group">
+        <h3>Cena (RSD)</h3>
+        <div class="range-inputs">
+          <mat-form-field appearance="outline" class="range-field">
+            <mat-label>Od</mat-label>
+            <input matInput type="number" [ngModel]="minPrice()" (ngModelChange)="minPrice.set($event)" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="range-field">
+            <mat-label>Do</mat-label>
+            <input matInput type="number" [ngModel]="maxPrice()" (ngModelChange)="maxPrice.set($event)" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <h3>Datum proizvodnje</h3>
+        <div class="range-inputs range-inputs-stacked">
+          <mat-form-field appearance="outline" class="range-field">
+            <mat-label>Od</mat-label>
+            <input matInput type="date" [ngModel]="dateFrom()" (ngModelChange)="dateFrom.set($event)" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="range-field">
+            <mat-label>Do</mat-label>
+            <input matInput type="date" [ngModel]="dateTo()" (ngModelChange)="dateTo.set($event)" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <button mat-stroked-button class="clear-button" (click)="clearFilters()">
+        Obriši filtere
+      </button>
+    </aside>
+
+    <div class="content">
+      <p class="results-count">{{ filteredToys().length }} igračaka pronađeno</p>
+
+      @if (filteredToys().length === 0) {
+      <p class="no-results">Nema igračaka koje odgovaraju izabranim filterima.</p>
+      }
+
+      <div class="toy-grid">
+        @for (toy of filteredToys(); track toy.toyId) {
         <mat-card class="toy-card">
           <img mat-card-image [src]="imageBaseUrl + toy.imageUrl" [alt]="toy.name" />
           <mat-card-header>
@@ -23,7 +103,9 @@
             <p class="price">{{ toy.price }} RSD</p>
           </mat-card-content>
         </mat-card>
-      }
+        }
+      </div>
     </div>
+  </div>
   }
 </div>
