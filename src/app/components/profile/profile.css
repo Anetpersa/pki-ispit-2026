@@ -85,3 +85,18 @@ mat-chip {
   padding: 8px 0;
   font-size: 15px;
 }
+
+@media (max-width: 600px) {
+  .profile-page {
+    padding: 24px 12px;
+  }
+
+  .profile-card {
+    padding: 20px;
+  }
+
+  .two-col {
+    flex-direction: column;
+    gap: 0;
+  }
+}
