@@ -25,15 +25,21 @@ import { ToyTypeModel } from '../../../models/toy-type.model';
   styleUrl: './profile.css',
 })
 export class Profile implements OnInit {
-  email = signal('');
   firstName = signal('');
   lastName = signal('');
+  email = signal('');
   phone = signal('');
   address = signal('');
   selectedTypeIds = signal<Set<number>>(new Set());
 
   types = signal<ToyTypeModel[]>([]);
   loadingTypes = signal(true);
+
+  showPasswordForm = signal(false);
+  newPassword = signal('');
+  confirmPassword = signal('');
+  showNewPassword = signal(false);
+  showConfirmPassword = signal(false);
 
   saving = signal(false);
   saveMessage = signal<string | null>(null);
@@ -48,9 +54,9 @@ export class Profile implements OnInit {
     }
 
     this.userId = user.userId;
-    this.email.set(user.email);
     this.firstName.set(user.firstName);
     this.lastName.set(user.lastName);
+    this.email.set(user.email);
     this.phone.set(user.phone);
     this.address.set(user.address);
     this.selectedTypeIds.set(new Set(user.favoriteToyTypes ?? []));
@@ -80,19 +86,55 @@ export class Profile implements OnInit {
     this.selectedTypeIds.set(current);
   }
 
-  onSave() {
+  togglePasswordForm() {
+    this.showPasswordForm.set(!this.showPasswordForm());
+    this.newPassword.set('');
+    this.confirmPassword.set('');
+    this.showNewPassword.set(false);
+    this.showConfirmPassword.set(false);
+  }
+
+  toggleShowNewPassword() {
+    this.showNewPassword.set(!this.showNewPassword());
+  }
+
+  toggleShowConfirmPassword() {
+    this.showConfirmPassword.set(!this.showConfirmPassword());
+  }
+
+  async onSave() {
     this.errorMessage.set(null);
     this.saveMessage.set(null);
-    this.saving.set(true);
 
+    if (this.showPasswordForm() && this.newPassword()) {
+      if (this.newPassword().length < 6) {
+        this.errorMessage.set('Nova lozinka mora imati bar 6 karaktera.');
+        return;
+      }
+      if (this.newPassword() !== this.confirmPassword()) {
+        this.errorMessage.set('Lozinke se ne poklapaju.');
+        return;
+      }
+    }
+
+    this.saving.set(true);
     try {
       UserService.updateProfile(this.userId, {
         firstName: this.firstName(),
         lastName: this.lastName(),
+        email: this.email(),
         phone: this.phone(),
         address: this.address(),
         favoriteToyTypes: Array.from(this.selectedTypeIds()),
       });
+
+      if (this.showPasswordForm() && this.newPassword()) {
+        await UserService.changePassword(this.userId, this.newPassword());
+        this.showPasswordForm.set(false);
+        this.newPassword.set('');
+        this.confirmPassword.set('');
+      }
+
       this.saveMessage.set('Podaci su uspešno sačuvani.');
     } catch (err) {
       this.errorMessage.set(err instanceof Error ? err.message : 'Čuvanje nije uspelo.');
