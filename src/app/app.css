@@ -175,62 +175,62 @@ router-outlet + * {
   font-size: 13px;
 }
 
-.menu-toggle {
+.mobile-actions {
+  display: none;
+}
+
+.mobile-search-bar {
   display: none;
 }
 
 @media (max-width: 960px) {
-  mat-toolbar {
-    height: auto;
-    padding: 8px 0;
-  }
-
-  .toolbar-inner {
-    flex-wrap: wrap;
-  }
-
-  .menu-toggle {
-    display: inline-flex;
-    order: 1;
-    margin-left: auto;
-  }
-
   .main-nav,
   .toolbar-search,
   .auth-links,
   .user-menu-trigger {
     display: none;
+  }
+
+  .mobile-actions {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin-left: auto;
+  }
+
+  .mobile-actions.hidden {
+    display: none;
+  }
+
+  .mobile-search-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    margin-left: auto;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 6px 16px;
+  }
+
+  .mobile-search-bar input {
+    border: none;
+    background: transparent;
+    outline: none;
+    color: var(--mat-sys-on-primary);
+    font-size: 14px;
     width: 100%;
   }
 
-  .toolbar-inner.menu-open .main-nav,
-  .toolbar-inner.menu-open .toolbar-search,
-  .toolbar-inner.menu-open .auth-links,
-  .toolbar-inner.menu-open .user-menu-trigger {
-    display: flex;
+  .mobile-search-bar input::placeholder {
+    color: var(--mat-sys-on-primary);
+    opacity: 0.6;
   }
 
-  .toolbar-inner.menu-open .main-nav {
-    flex-direction: column;
-    align-items: stretch;
-    order: 3;
-  }
-
-  .toolbar-inner.menu-open .toolbar-search {
-    order: 4;
-    max-width: none;
-    margin: 8px 0 0;
-  }
-
-  .toolbar-inner.menu-open .auth-links {
-    order: 5;
-    justify-content: center;
-    padding: 8px 0 0;
-  }
-
-  .toolbar-inner.menu-open .user-menu-trigger {
-    order: 5;
-    justify-content: flex-start;
-    padding-left: 0;
+  .mobile-search-bar mat-icon {
+    color: var(--mat-sys-on-primary);
+    opacity: 0.85;
+    cursor: pointer;
+    flex-shrink: 0;
   }
 }

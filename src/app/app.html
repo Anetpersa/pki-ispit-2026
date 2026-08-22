@@ -1,18 +1,68 @@
 <mat-toolbar color="primary">
-  <div class="toolbar-inner" [class.menu-open]="mobileMenuOpen()">
+  <div class="toolbar-inner">
     <a class="brand" routerLink="/" (click)="clearSearch()">
       <img src="toybox-logo.png" alt="ToyBox logo" class="brand-logo" />
       <span>ToyBox</span>
     </a>
 
-    <button
-      mat-icon-button
-      class="menu-toggle"
-      (click)="toggleMobileMenu()"
-      [attr.aria-label]="mobileMenuOpen() ? 'Zatvori meni' : 'Otvori meni'"
-    >
-      <mat-icon>{{ mobileMenuOpen() ? 'close' : 'menu' }}</mat-icon>
-    </button>
+    <div class="mobile-actions" [class.hidden]="mobileSearchOpen()">
+      <a mat-icon-button routerLink="/igracke" routerLinkActive="active-link" (click)="clearSearch()" aria-label="Igračke">
+        <mat-icon>toys</mat-icon>
+      </a>
+      <a mat-icon-button routerLink="/cart" routerLinkActive="active-link" (click)="clearSearch()" aria-label="Korpa">
+        <mat-icon
+          [matBadge]="cartCount()"
+          [matBadgeHidden]="cartCount() === 0"
+          matBadgeSize="small"
+          matBadgeColor="accent"
+        >shopping_cart</mat-icon>
+      </a>
+      <button mat-icon-button [matMenuTriggerFor]="mobileUserMenu" aria-label="Nalog">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+      <button mat-icon-button (click)="toggleMobileSearch()" aria-label="Pretraga">
+        <mat-icon>search</mat-icon>
+      </button>
+    </div>
+
+    <mat-menu #mobileUserMenu="matMenu">
+      @if (currentUser()) {
+      <a mat-menu-item routerLink="/profil">
+        <mat-icon>person</mat-icon>
+        <span>Profil</span>
+      </a>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Odjava</span>
+      </button>
+      } @else {
+      <a mat-menu-item routerLink="/login">
+        <mat-icon>login</mat-icon>
+        <span>Prijava</span>
+      </a>
+      <a mat-menu-item routerLink="/signup">
+        <mat-icon>person_add</mat-icon>
+        <span>Registracija</span>
+      </a>
+      }
+    </mat-menu>
+
+    @if (mobileSearchOpen()) {
+    <div class="mobile-search-bar">
+      <mat-icon (click)="onSearch()">search</mat-icon>
+      <input
+        type="text"
+        placeholder="Pretraži..."
+        aria-label="Pretraži igračke"
+        [ngModel]="searchTerm()"
+        (ngModelChange)="searchTerm.set($event)"
+        (keyup.enter)="onSearch()"
+      />
+      <button type="button" class="clear-search-btn" (click)="closeMobileSearch()" aria-label="Zatvori pretragu">
+        ×
+      </button>
+    </div>
+    }
 
     <nav class="main-nav">
       <a mat-button routerLink="/igracke" routerLinkActive="active-link" (click)="clearSearch()">
