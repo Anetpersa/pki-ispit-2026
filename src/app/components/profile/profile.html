@@ -2,108 +2,150 @@
     <mat-card class="profile-card">
         <h1>Profil</h1>
 
-        <div class="field-row two-col">
-            <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Ime</mat-label>
-                <input matInput [ngModel]="firstName()" (ngModelChange)="firstName.set($event)" name="firstName" />
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Prezime</mat-label>
-                <input matInput [ngModel]="lastName()" (ngModelChange)="lastName.set($event)" name="lastName" />
-            </mat-form-field>
-        </div>
-
-        <div class="field-row two-col">
-            <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Telefon</mat-label>
-                <input matInput [ngModel]="phone()" (ngModelChange)="phone.set($event)" name="phone" />
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Adresa</mat-label>
-                <input matInput [ngModel]="address()" (ngModelChange)="address.set($event)" name="address" />
-            </mat-form-field>
-        </div>
-
-        <div class="login-data-section">
-            <h2>Podaci za prijavu</h2>
-
-            <div class="field-row">
-                <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Email</mat-label>
-                    <input matInput type="email" [ngModel]="email()" (ngModelChange)="email.set($event)" name="email" />
-                </mat-form-field>
-            </div>
-
-            <p class="section-hint">Lozinka se iz bezbednosnih razloga ne prikazuje.</p>
-
-            <div class="field-row">
-                <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Lozinka</mat-label>
-                    <input matInput type="password" value="••••••••" disabled />
-                </mat-form-field>
-            </div>
-
-            @if (!showPasswordForm()) {
-            <button mat-stroked-button type="button" class="change-password-button" (click)="togglePasswordForm()">
-                <mat-icon>lock_reset</mat-icon>
-                Promeni lozinku
-            </button>
-            } @else {
+        <form #profileForm="ngForm" (ngSubmit)="onSave()" novalidate>
             <div class="field-row two-col">
                 <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Nova lozinka</mat-label>
-                    <input matInput [type]="showNewPassword() ? 'text' : 'password'" [ngModel]="newPassword()"
-                        (ngModelChange)="newPassword.set($event)" name="newPassword" />
-                    <button mat-icon-button matSuffix type="button" (click)="toggleShowNewPassword()"
-                        [attr.aria-label]="showNewPassword() ? 'Sakrij lozinku' : 'Prikaži lozinku'">
-                        <mat-icon>{{ showNewPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
-                    </button>
+                    <mat-label>Ime</mat-label>
+                    <input matInput [ngModel]="firstName()" (ngModelChange)="firstName.set($event)" name="firstName"
+                        required minlength="2" #firstNameModel="ngModel" />
+                    @if (firstNameModel.errors?.['required']) {
+                    <mat-error>Ime je obavezno.</mat-error>
+                    } @else if (firstNameModel.errors?.['minlength']) {
+                    <mat-error>Ime mora imati bar 2 karaktera.</mat-error>
+                    }
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Potvrda nove lozinke</mat-label>
-                    <input matInput [type]="showConfirmPassword() ? 'text' : 'password'" [ngModel]="confirmPassword()"
-                        (ngModelChange)="confirmPassword.set($event)" name="confirmPassword" />
-                    <button mat-icon-button matSuffix type="button" (click)="toggleShowConfirmPassword()"
-                        [attr.aria-label]="showConfirmPassword() ? 'Sakrij lozinku' : 'Prikaži lozinku'">
-                        <mat-icon>{{ showConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
-                    </button>
+                    <mat-label>Prezime</mat-label>
+                    <input matInput [ngModel]="lastName()" (ngModelChange)="lastName.set($event)" name="lastName"
+                        required minlength="2" #lastNameModel="ngModel" />
+                    @if (lastNameModel.errors?.['required']) {
+                    <mat-error>Prezime je obavezno.</mat-error>
+                    } @else if (lastNameModel.errors?.['minlength']) {
+                    <mat-error>Prezime mora imati bar 2 karaktera.</mat-error>
+                    }
                 </mat-form-field>
             </div>
-            <button mat-button type="button" (click)="togglePasswordForm()">Otkaži promenu lozinke</button>
-            }
-        </div>
 
-        <div class="favorites-section">
-            <h2>Omiljeni tipovi igračaka</h2>
-
-            @if (loadingTypes()) {
-            <p>Učitavanje tipova...</p>
-            } @else {
-            <mat-chip-set>
-                @for (type of types(); track type.typeId) {
-                <mat-chip [highlighted]="selectedTypeIds().has(type.typeId)" (click)="toggleFavoriteType(type.typeId)">
-                    @if (selectedTypeIds().has(type.typeId)) {
-                    <mat-icon matChipAvatar>check</mat-icon>
+            <div class="field-row two-col">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Telefon</mat-label>
+                    <input matInput type="tel" [ngModel]="phone()" (ngModelChange)="phone.set($event)" name="phone"
+                        required pattern="^\d{9,10}$" #phoneModel="ngModel" />
+                    @if (phoneModel.errors?.['required']) {
+                    <mat-error>Telefon je obavezan.</mat-error>
+                    } @else if (phoneModel.errors?.['pattern']) {
+                    <mat-error>Telefon mora imati 9 ili 10 cifara.</mat-error>
                     }
-                    {{ type.name }}
-                </mat-chip>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Adresa</mat-label>
+                    <input matInput [ngModel]="address()" (ngModelChange)="address.set($event)" name="address" required
+                        minlength="4" #addressModel="ngModel" />
+                    @if (addressModel.errors?.['required']) {
+                    <mat-error>Adresa je obavezna.</mat-error>
+                    } @else if (addressModel.errors?.['minlength']) {
+                    <mat-error>Unesite punu adresu (bar 4 karaktera).</mat-error>
+                    }
+                </mat-form-field>
+            </div>
+
+            <div class="login-data-section">
+                <h2>Podaci za prijavu</h2>
+
+                <div class="field-row">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Email</mat-label>
+                        <input matInput type="email" [ngModel]="email()" (ngModelChange)="email.set($event)"
+                            name="email" required pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" #emailModel="ngModel" />
+                        @if (emailModel.errors?.['required']) {
+                        <mat-error>Email je obavezan.</mat-error>
+                        } @else if (emailModel.errors?.['pattern']) {
+                        <mat-error>Email mora sadržati @ i tačku (npr. ime&#64;primer.com).</mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+
+                <p class="section-hint">Lozinka se iz bezbednosnih razloga ne prikazuje.</p>
+
+                <div class="field-row">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Lozinka</mat-label>
+                        <input matInput type="password" value="••••••••" disabled />
+                    </mat-form-field>
+                </div>
+
+                @if (!showPasswordForm()) {
+                <button mat-stroked-button type="button" class="change-password-button" (click)="togglePasswordForm()">
+                    <mat-icon>lock_reset</mat-icon>
+                    Promeni lozinku
+                </button>
+                } @else {
+                <div class="field-row two-col">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Nova lozinka</mat-label>
+                        <input matInput [type]="showNewPassword() ? 'text' : 'password'" [ngModel]="newPassword()"
+                            (ngModelChange)="newPassword.set($event)" name="newPassword" minlength="6"
+                            #newPasswordModel="ngModel" />
+                        <button mat-icon-button matSuffix type="button" (click)="toggleShowNewPassword()"
+                            [attr.aria-label]="showNewPassword() ? 'Sakrij lozinku' : 'Prikaži lozinku'">
+                            <mat-icon>{{ showNewPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+                        </button>
+                        @if (newPasswordModel.errors?.['minlength']) {
+                        <mat-error>Nova lozinka mora imati bar 6 karaktera.</mat-error>
+                        }
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Potvrda nove lozinke</mat-label>
+                        <input matInput [type]="showConfirmPassword() ? 'text' : 'password'"
+                            [ngModel]="confirmPassword()" (ngModelChange)="confirmPassword.set($event)"
+                            name="confirmPassword" #confirmPasswordModel="ngModel" />
+                        <button mat-icon-button matSuffix type="button" (click)="toggleShowConfirmPassword()"
+                            [attr.aria-label]="showConfirmPassword() ? 'Sakrij lozinku' : 'Prikaži lozinku'">
+                            <mat-icon>{{ showConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+                        </button>
+                        @if (newPassword() && confirmPasswordModel.value !== newPassword()) {
+                        <mat-error>Lozinke se ne poklapaju.</mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+                <button mat-button type="button" (click)="togglePasswordForm()">Otkaži promenu lozinke</button>
                 }
-            </mat-chip-set>
+            </div>
+
+            <div class="favorites-section">
+                <h2>Omiljeni tipovi igračaka</h2>
+
+                @if (loadingTypes()) {
+                <p>Učitavanje tipova...</p>
+                } @else {
+                <mat-chip-set>
+                    @for (type of types(); track type.typeId) {
+                    <mat-chip [highlighted]="selectedTypeIds().has(type.typeId)"
+                        (click)="toggleFavoriteType(type.typeId)">
+                        @if (selectedTypeIds().has(type.typeId)) {
+                        <mat-icon matChipAvatar>check</mat-icon>
+                        }
+                        {{ type.name }}
+                    </mat-chip>
+                    }
+                </mat-chip-set>
+                }
+            </div>
+
+            @if (saveMessage()) {
+            <p class="success">{{ saveMessage() }}</p>
             }
-        </div>
+            @if (errorMessage()) {
+            <p class="error">{{ errorMessage() }}</p>
+            }
 
-        @if (saveMessage()) {
-        <p class="success">{{ saveMessage() }}</p>
-        }
-        @if (errorMessage()) {
-        <p class="error">{{ errorMessage() }}</p>
-        }
-
-        <button mat-flat-button color="primary" class="save-button" (click)="onSave()" [disabled]="saving()">
-            {{ saving() ? 'Čuvanje...' : 'Sačuvaj izmene' }}
-        </button>
+            <button mat-flat-button color="primary" type="submit" class="save-button"
+                [disabled]="saving() || profileForm.invalid || (newPassword() !== confirmPassword())">
+                {{ saving() ? 'Čuvanje...' : 'Sačuvaj izmene' }}
+            </button>
+        </form>
     </mat-card>
 </div>

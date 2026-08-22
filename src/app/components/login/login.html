@@ -7,10 +7,24 @@
 
     <h1>Prijava</h1>
 
-    <form (ngSubmit)="onSubmit()">
+    <form #loginForm="ngForm" (ngSubmit)="onSubmit()" novalidate>
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Email</mat-label>
-        <input matInput type="email" [ngModel]="email()" (ngModelChange)="email.set($event)" name="email" required />
+        <input
+          matInput
+          type="email"
+          [ngModel]="email()"
+          (ngModelChange)="email.set($event)"
+          name="email"
+          required
+          pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
+          #emailModel="ngModel"
+        />
+        @if (emailModel.errors?.['required']) {
+          <mat-error>Email je obavezan.</mat-error>
+        } @else if (emailModel.errors?.['pattern']) {
+          <mat-error>Email mora sadržati @ i tačku (npr. ime&#64;primer.com).</mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
@@ -22,6 +36,7 @@
           (ngModelChange)="password.set($event)"
           name="password"
           required
+          #passwordModel="ngModel"
         />
         <button
           mat-icon-button
@@ -32,13 +47,16 @@
         >
           <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
+        @if (passwordModel.errors?.['required']) {
+          <mat-error>Lozinka je obavezna.</mat-error>
+        }
       </mat-form-field>
 
       @if (error()) {
         <p class="error">{{ error() }}</p>
       }
 
-      <button mat-raised-button color="primary" type="submit" class="full-width" [disabled]="loading()">
+      <button mat-raised-button color="primary" type="submit" class="full-width" [disabled]="loading() || loginForm.invalid">
         {{ loading() ? 'Prijavljivanje...' : 'Prijavi se' }}
       </button>
     </form>
