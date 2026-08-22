@@ -1,0 +1,69 @@
+<div class="profile-page">
+  <mat-card class="profile-card">
+    <h1>Profil</h1>
+
+    <div class="field-row">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput [value]="email()" disabled />
+      </mat-form-field>
+    </div>
+
+    <div class="field-row two-col">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Ime</mat-label>
+        <input matInput [ngModel]="firstName()" (ngModelChange)="firstName.set($event)" name="firstName" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Prezime</mat-label>
+        <input matInput [ngModel]="lastName()" (ngModelChange)="lastName.set($event)" name="lastName" />
+      </mat-form-field>
+    </div>
+
+    <div class="field-row two-col">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Telefon</mat-label>
+        <input matInput [ngModel]="phone()" (ngModelChange)="phone.set($event)" name="phone" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Adresa</mat-label>
+        <input matInput [ngModel]="address()" (ngModelChange)="address.set($event)" name="address" />
+      </mat-form-field>
+    </div>
+
+    <div class="favorites-section">
+      <h2>Omiljeni tipovi igračaka</h2>
+
+      @if (loadingTypes()) {
+      <p>Učitavanje tipova...</p>
+      } @else {
+      <mat-chip-set>
+        @for (type of types(); track type.typeId) {
+        <mat-chip
+          [highlighted]="selectedTypeIds().has(type.typeId)"
+          (click)="toggleFavoriteType(type.typeId)"
+        >
+          @if (selectedTypeIds().has(type.typeId)) {
+          <mat-icon matChipAvatar>check</mat-icon>
+          }
+          {{ type.name }}
+        </mat-chip>
+        }
+      </mat-chip-set>
+      }
+    </div>
+
+    @if (saveMessage()) {
+    <p class="success">{{ saveMessage() }}</p>
+    }
+    @if (errorMessage()) {
+    <p class="error">{{ errorMessage() }}</p>
+    }
+
+    <button mat-raised-button color="primary" (click)="onSave()" [disabled]="saving()">
+      {{ saving() ? 'Čuvanje...' : 'Sačuvaj izmene' }}
+    </button>
+  </mat-card>
+</div>

@@ -1,0 +1,75 @@
+<div class="cart-page">
+  <h1>Korpa</h1>
+
+  @if (errorMessage()) {
+  <p class="error">{{ errorMessage() }}</p>
+  }
+
+  @if (reservations().length === 0) {
+  <p class="empty-cart">
+    Korpa je prazna. Pogledajte <a routerLink="/igracke">igračke</a> i napravite rezervaciju.
+  </p>
+  } @else {
+  <div class="reservation-list">
+    @for (reservation of reservations(); track reservation.reservationId) {
+    <mat-card class="reservation-card">
+      <img
+        class="reservation-image"
+        [src]="imageBaseUrl + reservation.toyImageUrl"
+        [alt]="reservation.toyName"
+      />
+
+      <div class="reservation-body">
+        <div class="reservation-header">
+          <h3>{{ reservation.toyName }}</h3>
+          <mat-chip
+            [class.status-rezervisano]="reservation.status === 'rezervisano'"
+            [class.status-pristiglo]="reservation.status === 'pristiglo'"
+            [class.status-otkazano]="reservation.status === 'otkazano'"
+          >
+            {{ statusLabel(reservation.status) }}
+          </mat-chip>
+        </div>
+
+        <p class="reservation-date">
+          Rezervisano: {{ reservation.reservationDate | date: 'dd.MM.yyyy.' }}
+        </p>
+        <p class="reservation-price">{{ reservation.toyPrice }} RSD</p>
+
+        @if (reservation.status === 'pristiglo') {
+        <div class="rating-row">
+          <span>Ocena:</span>
+          @for (star of stars; track star) {
+          <mat-icon
+            class="star"
+            (click)="rate(reservation.reservationId, star)"
+          >
+            {{ (reservation.rating ?? 0) >= star ? 'star' : 'star_border' }}
+          </mat-icon>
+          }
+        </div>
+        }
+
+        <div class="reservation-actions">
+          @if (reservation.status === 'rezervisano') {
+          <button mat-stroked-button color="warn" (click)="cancelReservation(reservation.reservationId)">
+            Otkaži rezervaciju
+          </button>
+          }
+          @if (reservation.status === 'pristiglo') {
+          <button mat-stroked-button color="warn" (click)="removeFromCart(reservation.reservationId)">
+            Ukloni iz korpe
+          </button>
+          }
+        </div>
+      </div>
+    </mat-card>
+    }
+  </div>
+
+  <div class="cart-summary">
+    <span>Ukupno:</span>
+    <span class="total-price">{{ totalPrice() }} RSD</span>
+  </div>
+  }
+</div>
