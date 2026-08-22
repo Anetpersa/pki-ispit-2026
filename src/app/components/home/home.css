@@ -193,3 +193,33 @@
   font-size: 13px;
   color: var(--mat-sys-secondary);
 }
+
+@media (max-width: 900px) {
+  .featured-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .hero-text h1 {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 600px) {
+  .featured-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .hero-columns {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .hero-text {
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero-illustration-img {
+    max-width: 260px;
+  }
+}
