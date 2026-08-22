@@ -4,6 +4,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatBadgeModule } from '@angular/material/badge';
 import { UserService } from '../services/user.service';
 
 @Component({
@@ -16,6 +17,7 @@ import { UserService } from '../services/user.service';
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
+    MatBadgeModule,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
@@ -23,6 +25,7 @@ import { UserService } from '../services/user.service';
 export class App {
   protected readonly title = signal('pki-ispit-2026');
   protected readonly currentUser = UserService.currentUser;
+  protected readonly cartCount = UserService.activeCartCount;
 
   constructor(private router: Router) {}
 

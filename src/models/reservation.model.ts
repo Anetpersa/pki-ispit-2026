@@ -5,6 +5,11 @@ export interface ReservationModel {
   userId: string;
   toyId: number;
   toyName: string;
+  toyDescription: string;
+  toyTypeName: string;
+  toyAgeGroupName: string;
+  toyTargetGroup: string;
+  toyProductionDate: string;
   toyPrice: number;
   toyImageUrl: string;
   status: ReservationStatus;

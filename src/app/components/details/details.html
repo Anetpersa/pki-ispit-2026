@@ -18,13 +18,17 @@
 
       <h1>{{ toy.name }}</h1>
 
-      @if (averageRating(); as avg) {
       <div class="average-rating">
-        <mat-icon>star</mat-icon>
+        @for (star of stars; track star) {
+        <mat-icon>{{ averageStarIcon(star) }}</mat-icon>
+        }
+        @if (averageRating(); as avg) {
         <span>{{ avg }} / 5</span>
         <span class="review-count">({{ reviews().length }} recenzija)</span>
+        } @else {
+        <span class="review-count">Još uvek nema recenzija</span>
+        }
       </div>
-      }
 
       <p class="description">{{ toy.description }}</p>
 
@@ -39,7 +43,7 @@
         </div>
         <div class="meta-item">
           <span class="meta-label">Ciljna grupa</span>
-          <span>{{ toy.targetGroup }}</span>
+          <span>{{ targetGroupLabel(toy.targetGroup) }}</span>
         </div>
         <div class="meta-item">
           <span class="meta-label">Datum proizvodnje</span>
@@ -66,6 +70,12 @@
   <section class="reviews-section">
     <h2>Recenzije</h2>
 
+    <p class="reviews-hint">
+      Recenziju je moguće ostaviti isključivo za igračke koje ste rezervisali i koje imaju
+      status <strong>pristiglo</strong> - to se radi na stranici
+      <a routerLink="/cart">Korpa</a>.
+    </p>
+
     @if (reviews().length === 0) {
     <p class="no-reviews">Još uvek nema recenzija za ovu igračku.</p>
     }
@@ -89,56 +99,6 @@
       </mat-card>
       }
     </div>
-
-    @if (isLoggedIn) {
-    <mat-card class="add-review-card">
-      <h3>Dodaj recenziju</h3>
-
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Recenziju ostavlja</mat-label>
-        <mat-select [ngModel]="newReviewAuthorType()" (ngModelChange)="newReviewAuthorType.set($event)">
-          <mat-option value="roditelj">Roditelj</mat-option>
-          <mat-option value="dete">Dete</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <div class="rating-picker">
-        <span>Ocena:</span>
-        @for (star of stars; track star) {
-        <mat-icon class="star" (click)="setNewReviewRating(star)">
-          {{ newReviewRating() >= star ? 'star' : 'star_border' }}
-        </mat-icon>
-        }
-      </div>
-
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Komentar</mat-label>
-        <textarea
-          matInput
-          rows="3"
-          [ngModel]="newReviewComment()"
-          (ngModelChange)="newReviewComment.set($event)"
-        ></textarea>
-      </mat-form-field>
-
-      @if (reviewError()) {
-      <p class="error">{{ reviewError() }}</p>
-      }
-
-      <button
-        mat-raised-button
-        color="primary"
-        (click)="onSubmitReview()"
-        [disabled]="submittingReview()"
-      >
-        {{ submittingReview() ? 'Slanje...' : 'Pošalji recenziju' }}
-      </button>
-    </mat-card>
-    } @else {
-    <p class="login-prompt">
-      <a routerLink="/login">Prijavite se</a> da biste ostavili recenziju.
-    </p>
-    }
   </section>
   }
 </div>

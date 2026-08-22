@@ -11,7 +11,12 @@
         Igračke
       </a>
       <a mat-button routerLink="/cart" routerLinkActive="active-link">
-        <mat-icon>shopping_cart</mat-icon>
+        <mat-icon
+          [matBadge]="cartCount()"
+          [matBadgeHidden]="cartCount() === 0"
+          matBadgeSize="small"
+          matBadgeColor="accent"
+        >shopping_cart</mat-icon>
         Korpa
       </a>
     </nav>

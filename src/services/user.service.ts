@@ -1,6 +1,7 @@
-import { signal } from '@angular/core';
+import { computed, signal } from '@angular/core';
 import { UserModel } from '../models/user.model';
 import { ReservationModel, ReservationStatus } from '../models/reservation.model';
+import { ToyModel } from '../models/toy.model';
 
 const USERS_KEY = 'toybox_users';
 const CURRENT_USER_KEY = 'toybox_current_user';
@@ -27,7 +28,7 @@ function saveUsers(users: UserModel[]): void {
     localStorage.setItem(USERS_KEY, JSON.stringify(users));
 }
 
-function getReservationsRaw(): ReservationModel[] {
+function loadReservationsFromStorage(): ReservationModel[] {
     const raw = localStorage.getItem(RESERVATIONS_KEY);
     return raw ? JSON.parse(raw) : [];
 }
@@ -38,6 +39,18 @@ function saveReservations(reservations: ReservationModel[]): void {
 
 export class UserService {
     static currentUser = signal<UserModel | null>(UserService.loadCurrentUserFromStorage());
+
+    static reservations = signal<ReservationModel[]>(loadReservationsFromStorage());
+
+    static activeCartCount = computed(() => {
+        const user = UserService.currentUser();
+        if (!user) {
+            return 0;
+        }
+        return UserService.reservations().filter(
+            (r) => r.userId === user.userId && r.status !== 'otkazano'
+        ).length;
+    });
 
     private static loadCurrentUserFromStorage(): UserModel | null {
         const raw = localStorage.getItem(CURRENT_USER_KEY);
@@ -109,12 +122,23 @@ export class UserService {
 
     static updateProfile(
         userId: string,
-        updates: Partial<Pick<UserModel, 'firstName' | 'lastName' | 'phone' | 'address' | 'favoriteToyTypes'>>
+        updates: Partial<
+            Pick<UserModel, 'firstName' | 'lastName' | 'email' | 'phone' | 'address' | 'favoriteToyTypes'>
+        >
     ): UserModel {
         const users = getUsers();
         const user = users.find((u) => u.userId === userId);
         if (!user) {
             throw new Error('Korisnik nije pronađen.');
+        }
+
+        if (updates.email && updates.email.toLowerCase() !== user.email.toLowerCase()) {
+            const emailTaken = users.some(
+                (u) => u.userId !== userId && u.email.toLowerCase() === updates.email!.toLowerCase()
+            );
+            if (emailTaken) {
+                throw new Error('Korisnik sa ovim email-om već postoji.');
+            }
         }
 
         Object.assign(user, updates);
@@ -127,65 +151,98 @@ export class UserService {
         return user;
     }
 
-    static createReservation(
-        toyId: number,
-        toyName: string,
-        toyPrice: number,
-        toyImageUrl: string
-    ): ReservationModel {
+    static async changePassword(userId: string, newPassword: string): Promise<void> {
+        const users = getUsers();
+        const user = users.find((u) => u.userId === userId);
+        if (!user) {
+            throw new Error('Korisnik nije pronađen.');
+        }
+
+        user.passwordHash = await hashPassword(newPassword);
+        saveUsers(users);
+
+        if (UserService.getCurrentUser()?.userId === userId) {
+            UserService.setCurrentUser(user);
+        }
+    }
+
+    static createReservation(toy: ToyModel): ReservationModel {
         const user = UserService.getCurrentUser();
         if (!user) {
             throw new Error('Morate biti prijavljeni da biste napravili rezervaciju.');
         }
 
-        const reservations = getReservationsRaw();
         const newReservation: ReservationModel = {
             reservationId: generateId(),
             userId: user.userId,
-            toyId,
-            toyName,
-            toyPrice,
-            toyImageUrl,
+            toyId: toy.toyId,
+            toyName: toy.name,
+            toyDescription: toy.description,
+            toyTypeName: toy.type.name,
+            toyAgeGroupName: toy.ageGroup.name,
+            toyTargetGroup: toy.targetGroup,
+            toyProductionDate: toy.productionDate,
+            toyPrice: toy.price,
+            toyImageUrl: toy.imageUrl,
             status: 'rezervisano',
             reservationDate: new Date().toISOString(),
         };
 
-        reservations.push(newReservation);
+        const reservations = [...UserService.reservations(), newReservation];
         saveReservations(reservations);
+        UserService.reservations.set(reservations);
         return newReservation;
     }
 
     static getReservationsForUser(userId: string): ReservationModel[] {
-        return getReservationsRaw().filter((r) => r.userId === userId);
+        return UserService.reservations().filter((r) => r.userId === userId);
+    }
+
+    private static updateReservation(
+        reservationId: string,
+        updater: (reservation: ReservationModel) => void
+    ): void {
+        const reservations = UserService.reservations();
+        const reservation = reservations.find((r) => r.reservationId === reservationId);
+        if (!reservation) {
+            throw new Error('Rezervacija nije pronađena.');
+        }
+
+        updater(reservation);
+        const updated = [...reservations];
+        saveReservations(updated);
+        UserService.reservations.set(updated);
     }
 
     static updateReservationStatus(reservationId: string, status: ReservationStatus): void {
-        const reservations = getReservationsRaw();
-        const reservation = reservations.find((r) => r.reservationId === reservationId);
-        if (!reservation) {
-            throw new Error('Rezervacija nije pronađena.');
-        }
+        UserService.updateReservation(reservationId, (reservation) => {
+            reservation.status = status;
+        });
+    }
 
-        reservation.status = status;
-        saveReservations(reservations);
+    static markReservationArrived(reservationId: string): void {
+        UserService.updateReservation(reservationId, (reservation) => {
+            if (reservation.status !== 'rezervisano') {
+                throw new Error('Samo rezervisane igračke mogu biti označene kao pristigle.');
+            }
+            reservation.status = 'pristiglo';
+        });
     }
 
     static deleteReservation(reservationId: string): void {
-        const reservations = getReservationsRaw().filter((r) => r.reservationId !== reservationId);
+        const reservations = UserService.reservations().filter(
+            (r) => r.reservationId !== reservationId
+        );
         saveReservations(reservations);
+        UserService.reservations.set(reservations);
     }
 
     static rateReservation(reservationId: string, rating: number): void {
-        const reservations = getReservationsRaw();
-        const reservation = reservations.find((r) => r.reservationId === reservationId);
-        if (!reservation) {
-            throw new Error('Rezervacija nije pronađena.');
-        }
-        if (reservation.status !== 'pristiglo') {
-            throw new Error('Ocenjivanje je moguće samo za rezervacije sa statusom "pristiglo".');
-        }
-
-        reservation.rating = rating;
-        saveReservations(reservations);
+        UserService.updateReservation(reservationId, (reservation) => {
+            if (reservation.status !== 'pristiglo') {
+                throw new Error('Ocenjivanje je moguće samo za rezervacije sa statusom "pristiglo".');
+            }
+            reservation.rating = rating;
+        });
     }
 }
