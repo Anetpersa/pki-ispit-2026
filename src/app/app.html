@@ -1,16 +1,16 @@
 <mat-toolbar color="primary">
   <div class="toolbar-inner">
-    <a class="brand" routerLink="/">
+    <a class="brand" routerLink="/" (click)="clearSearch()">
       <img src="toybox-logo.png" alt="ToyBox logo" class="brand-logo" />
       <span>ToyBox</span>
     </a>
 
     <nav>
-      <a mat-button routerLink="/igracke" routerLinkActive="active-link">
+      <a mat-button routerLink="/igracke" routerLinkActive="active-link" (click)="clearSearch()">
         <mat-icon>toys</mat-icon>
         Igračke
       </a>
-      <a mat-button routerLink="/cart" routerLinkActive="active-link">
+      <a mat-button routerLink="/cart" routerLinkActive="active-link" (click)="clearSearch()">
         <mat-icon
           [matBadge]="cartCount()"
           [matBadgeHidden]="cartCount() === 0"
@@ -25,14 +25,25 @@
     </nav>
 
     <div class="toolbar-search">
-      <mat-icon (click)="onSearch(searchInput.value)">search</mat-icon>
+      <mat-icon (click)="onSearch()">search</mat-icon>
       <input
-        #searchInput
         type="text"
         placeholder="Pretraži igračke..."
         aria-label="Pretraži igračke"
-        (keyup.enter)="onSearch(searchInput.value)"
+        [ngModel]="searchTerm()"
+        (ngModelChange)="searchTerm.set($event)"
+        (keyup.enter)="onSearch()"
       />
+      @if (searchTerm()) {
+      <button
+        type="button"
+        class="clear-search-btn"
+        (click)="clearSearch()"
+        aria-label="Obriši pretragu"
+      >
+        ×
+      </button>
+      }
     </div>
 
     @if (currentUser()) {

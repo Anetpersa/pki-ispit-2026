@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,6 +15,7 @@ import { CatalogFilterService } from '../services/catalog-filter.service';
     RouterOutlet,
     RouterLink,
     RouterLinkActive,
+    FormsModule,
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
@@ -27,6 +29,7 @@ export class App {
   protected readonly title = signal('pki-ispit-2026');
   protected readonly currentUser = UserService.currentUser;
   protected readonly cartCount = UserService.activeCartCount;
+  protected readonly searchTerm = CatalogFilterService.searchTerm;
 
   constructor(private router: Router) {}
 
@@ -36,8 +39,11 @@ export class App {
     this.router.navigateByUrl('/');
   }
 
-  onSearch(term: string) {
-    CatalogFilterService.searchTerm.set(term.trim());
+  onSearch() {
     this.router.navigateByUrl('/igracke');
+  }
+
+  clearSearch() {
+    CatalogFilterService.searchTerm.set('');
   }
 }
