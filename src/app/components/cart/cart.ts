@@ -66,7 +66,14 @@ export class Cart implements OnInit {
 
   loadReservations() {
     const list = UserService.getReservationsForUser(this.userId);
-    list.sort((a, b) => new Date(b.reservationDate).getTime() - new Date(a.reservationDate).getTime());
+    list.sort((a, b) => {
+      const aCancelled = a.status === 'otkazano' ? 1 : 0;
+      const bCancelled = b.status === 'otkazano' ? 1 : 0;
+      if (aCancelled !== bCancelled) {
+        return aCancelled - bCancelled;
+      }
+      return new Date(b.reservationDate).getTime() - new Date(a.reservationDate).getTime();
+    });
     this.reservations.set(list);
   }
 
