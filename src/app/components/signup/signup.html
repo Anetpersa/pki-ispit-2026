@@ -55,6 +55,25 @@
         </button>
       </mat-form-field>
 
+      <div class="favorites-section">
+        <h2>Omiljeni tipovi igračaka</h2>
+
+        @if (loadingTypes()) {
+        <p>Učitavanje tipova...</p>
+        } @else {
+        <mat-chip-set>
+          @for (type of types(); track type.typeId) {
+          <mat-chip [highlighted]="selectedTypeIds().has(type.typeId)" (click)="toggleFavoriteType(type.typeId)">
+            @if (selectedTypeIds().has(type.typeId)) {
+            <mat-icon matChipAvatar>check</mat-icon>
+            }
+            {{ type.name }}
+          </mat-chip>
+          }
+        </mat-chip-set>
+        }
+      </div>
+
       @if (error()) {
         <p class="error">{{ error() }}</p>
       }

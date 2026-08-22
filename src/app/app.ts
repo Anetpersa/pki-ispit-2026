@@ -35,4 +35,9 @@ export class App {
     CatalogFilterService.clear();
     this.router.navigateByUrl('/');
   }
+
+  onSearch(term: string) {
+    CatalogFilterService.searchTerm.set(term.trim());
+    this.router.navigateByUrl('/igracke');
+  }
 }

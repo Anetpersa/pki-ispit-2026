@@ -31,3 +31,16 @@
   margin-top: 16px;
   font-size: 14px;
 }
+
+.favorites-section {
+  margin: 8px 0 20px;
+}
+
+.favorites-section h2 {
+  font-size: 16px;
+  margin: 0 0 12px;
+}
+
+mat-chip {
+  cursor: pointer;
+}

@@ -25,8 +25,14 @@
     </nav>
 
     <div class="toolbar-search">
-      <mat-icon>search</mat-icon>
-      <input type="text" placeholder="Pretraži igračke..." aria-label="Pretraži igračke" />
+      <mat-icon (click)="onSearch(searchInput.value)">search</mat-icon>
+      <input
+        #searchInput
+        type="text"
+        placeholder="Pretraži igračke..."
+        aria-label="Pretraži igračke"
+        (keyup.enter)="onSearch(searchInput.value)"
+      />
     </div>
 
     @if (currentUser()) {

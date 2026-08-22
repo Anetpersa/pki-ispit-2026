@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -7,7 +7,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatChipsModule } from '@angular/material/chips';
 import { UserService } from '../../../services/user.service';
+import { ToyService } from '../../../services/toy.service';
+import { ToyTypeModel } from '../../../models/toy-type.model';
 
 @Component({
   selector: 'app-signup',
@@ -19,11 +22,12 @@ import { UserService } from '../../../services/user.service';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    MatChipsModule,
   ],
   templateUrl: './signup.html',
   styleUrl: './signup.css',
 })
-export class Signup {
+export class Signup implements OnInit {
   firstName = signal('');
   lastName = signal('');
   email = signal('');
@@ -35,12 +39,42 @@ export class Signup {
   loading = signal(false);
   returnUrl: string | null = null;
 
+  types = signal<ToyTypeModel[]>([]);
+  loadingTypes = signal(true);
+  selectedTypeIds = signal<Set<number>>(new Set());
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private location: Location
   ) {
     this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+  }
+
+  ngOnInit() {
+    this.loadTypes();
+  }
+
+  async loadTypes() {
+    this.loadingTypes.set(true);
+    try {
+      const response = await ToyService.getTypes();
+      this.types.set(response.data);
+    } catch (err) {
+      console.error('Greška pri učitavanju tipova igračaka', err);
+    } finally {
+      this.loadingTypes.set(false);
+    }
+  }
+
+  toggleFavoriteType(typeId: number) {
+    const current = new Set(this.selectedTypeIds());
+    if (current.has(typeId)) {
+      current.delete(typeId);
+    } else {
+      current.add(typeId);
+    }
+    this.selectedTypeIds.set(current);
   }
 
   goBack() {
@@ -61,7 +95,8 @@ export class Signup {
         this.firstName(),
         this.lastName(),
         this.phone(),
-        this.address()
+        this.address(),
+        Array.from(this.selectedTypeIds())
       );
       this.router.navigateByUrl(this.returnUrl ?? '/');
     } catch (err) {
