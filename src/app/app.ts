@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
-import { Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { FormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -31,7 +32,16 @@ export class App {
   protected readonly cartCount = UserService.activeCartCount;
   protected readonly searchTerm = CatalogFilterService.searchTerm;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+    this.router.events
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .subscribe((event) => {
+        const leavingCatalogArea = !event.urlAfterRedirects.startsWith('/igracke');
+        if (leavingCatalogArea) {
+          CatalogFilterService.clear();
+        }
+      });
+  }
 
   logout() {
     UserService.logout();
