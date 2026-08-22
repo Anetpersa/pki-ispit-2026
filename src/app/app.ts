@@ -31,16 +31,25 @@ export class App {
   protected readonly currentUser = UserService.currentUser;
   protected readonly cartCount = UserService.activeCartCount;
   protected readonly searchTerm = CatalogFilterService.searchTerm;
+  protected readonly mobileMenuOpen = signal(false);
 
   constructor(private router: Router) {
     this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe((event) => {
-        const leavingCatalogArea = !event.urlAfterRedirects.startsWith('/igracke');
-        if (leavingCatalogArea) {
+        if (!event.urlAfterRedirects.startsWith('/igracke')) {
           CatalogFilterService.clear();
         }
+        this.closeMobileMenu();
       });
+  }
+
+  toggleMobileMenu() {
+    this.mobileMenuOpen.set(!this.mobileMenuOpen());
+  }
+
+  closeMobileMenu() {
+    this.mobileMenuOpen.set(false);
   }
 
   logout() {
@@ -51,6 +60,7 @@ export class App {
 
   onSearch() {
     this.router.navigateByUrl('/igracke');
+    this.closeMobileMenu();
   }
 
   clearSearch() {

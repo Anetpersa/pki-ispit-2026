@@ -174,3 +174,63 @@ router-outlet + * {
   align-items: center;
   font-size: 13px;
 }
+
+.menu-toggle {
+  display: none;
+}
+
+@media (max-width: 960px) {
+  mat-toolbar {
+    height: auto;
+    padding: 8px 0;
+  }
+
+  .toolbar-inner {
+    flex-wrap: wrap;
+  }
+
+  .menu-toggle {
+    display: inline-flex;
+    order: 1;
+    margin-left: auto;
+  }
+
+  .main-nav,
+  .toolbar-search,
+  .auth-links,
+  .user-menu-trigger {
+    display: none;
+    width: 100%;
+  }
+
+  .toolbar-inner.menu-open .main-nav,
+  .toolbar-inner.menu-open .toolbar-search,
+  .toolbar-inner.menu-open .auth-links,
+  .toolbar-inner.menu-open .user-menu-trigger {
+    display: flex;
+  }
+
+  .toolbar-inner.menu-open .main-nav {
+    flex-direction: column;
+    align-items: stretch;
+    order: 3;
+  }
+
+  .toolbar-inner.menu-open .toolbar-search {
+    order: 4;
+    max-width: none;
+    margin: 8px 0 0;
+  }
+
+  .toolbar-inner.menu-open .auth-links {
+    order: 5;
+    justify-content: center;
+    padding: 8px 0 0;
+  }
+
+  .toolbar-inner.menu-open .user-menu-trigger {
+    order: 5;
+    justify-content: flex-start;
+    padding-left: 0;
+  }
+}

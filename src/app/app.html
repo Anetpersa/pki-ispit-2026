@@ -1,11 +1,20 @@
 <mat-toolbar color="primary">
-  <div class="toolbar-inner">
+  <div class="toolbar-inner" [class.menu-open]="mobileMenuOpen()">
     <a class="brand" routerLink="/" (click)="clearSearch()">
       <img src="toybox-logo.png" alt="ToyBox logo" class="brand-logo" />
       <span>ToyBox</span>
     </a>
 
-    <nav>
+    <button
+      mat-icon-button
+      class="menu-toggle"
+      (click)="toggleMobileMenu()"
+      [attr.aria-label]="mobileMenuOpen() ? 'Zatvori meni' : 'Otvori meni'"
+    >
+      <mat-icon>{{ mobileMenuOpen() ? 'close' : 'menu' }}</mat-icon>
+    </button>
+
+    <nav class="main-nav">
       <a mat-button routerLink="/igracke" routerLinkActive="active-link" (click)="clearSearch()">
         <mat-icon>toys</mat-icon>
         Igračke

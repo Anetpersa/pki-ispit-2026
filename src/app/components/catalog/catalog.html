@@ -10,8 +10,13 @@
   }
 
   @if (!loading() && !error()) {
+  <button mat-stroked-button type="button" class="filters-toggle" (click)="toggleFilters()">
+    <mat-icon>{{ filtersOpen() ? 'expand_less' : 'tune' }}</mat-icon>
+    {{ filtersOpen() ? 'Sakrij filtere' : 'Prikaži filtere' }}
+  </button>
+
   <div class="catalog-layout">
-    <aside class="sidebar">
+    <aside class="sidebar" [class.sidebar-open]="filtersOpen()">
       <h2>Filteri</h2>
 
       <mat-form-field appearance="outline" class="full-width">
