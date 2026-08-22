@@ -10,53 +10,33 @@
     <form #loginForm="ngForm" (ngSubmit)="onSubmit()" novalidate>
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Email</mat-label>
-        <input
-          matInput
-          type="email"
-          [ngModel]="email()"
-          (ngModelChange)="email.set($event)"
-          name="email"
-          required
-          pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
-          #emailModel="ngModel"
-        />
+        <input matInput type="email" [ngModel]="email()" (ngModelChange)="email.set($event)" name="email" required
+          pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" #emailModel="ngModel" />
         @if (emailModel.errors?.['required']) {
-          <mat-error>Email je obavezan.</mat-error>
+        <mat-error>Email je obavezan.</mat-error>
         } @else if (emailModel.errors?.['pattern']) {
-          <mat-error>Email mora sadržati @ i tačku (npr. ime&#64;primer.com).</mat-error>
+        <mat-error>Email mora sadržati @ i tačku (npr. ime&#64;primer.com).</mat-error>
         }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Lozinka</mat-label>
-        <input
-          matInput
-          [type]="showPassword() ? 'text' : 'password'"
-          [ngModel]="password()"
-          (ngModelChange)="password.set($event)"
-          name="password"
-          required
-          #passwordModel="ngModel"
-        />
-        <button
-          mat-icon-button
-          matSuffix
-          type="button"
-          (click)="toggleShowPassword()"
-          [attr.aria-label]="showPassword() ? 'Sakrij lozinku' : 'Prikaži lozinku'"
-        >
+        <input matInput [type]="showPassword() ? 'text' : 'password'" [ngModel]="password()"
+          (ngModelChange)="password.set($event)" name="password" required #passwordModel="ngModel" />
+        <button mat-icon-button matSuffix type="button" (click)="toggleShowPassword()"
+          [attr.aria-label]="showPassword() ? 'Sakrij lozinku' : 'Prikaži lozinku'">
           <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
         @if (passwordModel.errors?.['required']) {
-          <mat-error>Lozinka je obavezna.</mat-error>
+        <mat-error>Lozinka je obavezna.</mat-error>
         }
       </mat-form-field>
 
       @if (error()) {
-        <p class="error">{{ error() }}</p>
+      <p class="error">{{ error() }}</p>
       }
 
-      <button mat-raised-button color="primary" type="submit" class="full-width" [disabled]="loading() || loginForm.invalid">
+      <button mat-raised-button color="primary" type="submit" class="submit-button full-width" [disabled]="loading()">
         {{ loading() ? 'Prijavljivanje...' : 'Prijavi se' }}
       </button>
     </form>

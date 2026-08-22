@@ -10,127 +10,72 @@
     <form #signupForm="ngForm" (ngSubmit)="onSubmit()" autocomplete="off" novalidate>
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Ime</mat-label>
-        <input
-          matInput
-          [ngModel]="firstName()"
-          (ngModelChange)="firstName.set($event)"
-          name="firstName"
-          autocomplete="off"
-          required
-          minlength="2"
-          #firstNameModel="ngModel"
-        />
+        <input matInput [ngModel]="firstName()" (ngModelChange)="firstName.set($event)" name="firstName"
+          autocomplete="off" required minlength="2" #firstNameModel="ngModel" />
         @if (firstNameModel.errors?.['required']) {
-          <mat-error>Ime je obavezno.</mat-error>
+        <mat-error>Ime je obavezno.</mat-error>
         } @else if (firstNameModel.errors?.['minlength']) {
-          <mat-error>Ime mora imati bar 2 karaktera.</mat-error>
+        <mat-error>Ime mora imati bar 2 karaktera.</mat-error>
         }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Prezime</mat-label>
-        <input
-          matInput
-          [ngModel]="lastName()"
-          (ngModelChange)="lastName.set($event)"
-          name="lastName"
-          autocomplete="off"
-          required
-          minlength="2"
-          #lastNameModel="ngModel"
-        />
+        <input matInput [ngModel]="lastName()" (ngModelChange)="lastName.set($event)" name="lastName" autocomplete="off"
+          required minlength="2" #lastNameModel="ngModel" />
         @if (lastNameModel.errors?.['required']) {
-          <mat-error>Prezime je obavezno.</mat-error>
+        <mat-error>Prezime je obavezno.</mat-error>
         } @else if (lastNameModel.errors?.['minlength']) {
-          <mat-error>Prezime mora imati bar 2 karaktera.</mat-error>
+        <mat-error>Prezime mora imati bar 2 karaktera.</mat-error>
         }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Email</mat-label>
-        <input
-          matInput
-          type="email"
-          [ngModel]="email()"
-          (ngModelChange)="email.set($event)"
-          name="email"
-          autocomplete="off"
-          required
-          pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
-          #emailModel="ngModel"
-        />
+        <input matInput type="email" [ngModel]="email()" (ngModelChange)="email.set($event)" name="email"
+          autocomplete="off" required pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" #emailModel="ngModel" />
         @if (emailModel.errors?.['required']) {
-          <mat-error>Email je obavezan.</mat-error>
+        <mat-error>Email je obavezan.</mat-error>
         } @else if (emailModel.errors?.['pattern']) {
-          <mat-error>Email mora sadržati @ i tačku (npr. ime&#64;primer.com).</mat-error>
+        <mat-error>Email mora sadržati @ i tačku (npr. ime&#64;primer.com).</mat-error>
         }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Telefon</mat-label>
-        <input
-          matInput
-          type="tel"
-          [ngModel]="phone()"
-          (ngModelChange)="phone.set($event)"
-          name="phone"
-          autocomplete="off"
-          required
-          pattern="^\d{9,10}$"
-          #phoneModel="ngModel"
-        />
+        <input matInput type="tel" [ngModel]="phone()" (ngModelChange)="phone.set($event)" name="phone"
+          autocomplete="off" required pattern="^\d{9,10}$" #phoneModel="ngModel" />
         @if (phoneModel.errors?.['required']) {
-          <mat-error>Telefon je obavezan.</mat-error>
+        <mat-error>Telefon je obavezan.</mat-error>
         } @else if (phoneModel.errors?.['pattern']) {
-          <mat-error>Telefon mora imati 9 ili 10 cifara.</mat-error>
+        <mat-error>Telefon mora imati 9 ili 10 cifara.</mat-error>
         }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Adresa</mat-label>
-        <input
-          matInput
-          [ngModel]="address()"
-          (ngModelChange)="address.set($event)"
-          name="address"
-          autocomplete="off"
-          required
-          minlength="4"
-          #addressModel="ngModel"
-        />
+        <input matInput [ngModel]="address()" (ngModelChange)="address.set($event)" name="address" autocomplete="off"
+          required minlength="4" #addressModel="ngModel" />
         @if (addressModel.errors?.['required']) {
-          <mat-error>Adresa je obavezna.</mat-error>
+        <mat-error>Adresa je obavezna.</mat-error>
         } @else if (addressModel.errors?.['minlength']) {
-          <mat-error>Unesite punu adresu (bar 4 karaktera).</mat-error>
+        <mat-error>Unesite punu adresu (bar 4 karaktera).</mat-error>
         }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Lozinka</mat-label>
-        <input
-          matInput
-          [type]="showPassword() ? 'text' : 'password'"
-          [ngModel]="password()"
-          (ngModelChange)="password.set($event)"
-          name="password"
-          autocomplete="new-password"
-          required
-          minlength="6"
-          #passwordModel="ngModel"
-        />
-        <button
-          mat-icon-button
-          matSuffix
-          type="button"
-          (click)="toggleShowPassword()"
-          [attr.aria-label]="showPassword() ? 'Sakrij lozinku' : 'Prikaži lozinku'"
-        >
+        <input matInput [type]="showPassword() ? 'text' : 'password'" [ngModel]="password()"
+          (ngModelChange)="password.set($event)" name="password" autocomplete="new-password" required minlength="6"
+          #passwordModel="ngModel" />
+        <button mat-icon-button matSuffix type="button" (click)="toggleShowPassword()"
+          [attr.aria-label]="showPassword() ? 'Sakrij lozinku' : 'Prikaži lozinku'">
           <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
         @if (passwordModel.errors?.['required']) {
-          <mat-error>Lozinka je obavezna.</mat-error>
+        <mat-error>Lozinka je obavezna.</mat-error>
         } @else if (passwordModel.errors?.['minlength']) {
-          <mat-error>Lozinka mora imati bar 6 karaktera.</mat-error>
+        <mat-error>Lozinka mora imati bar 6 karaktera.</mat-error>
         }
       </mat-form-field>
 
@@ -154,10 +99,10 @@
       </div>
 
       @if (error()) {
-        <p class="error">{{ error() }}</p>
+      <p class="error">{{ error() }}</p>
       }
 
-      <button mat-raised-button color="primary" type="submit" class="full-width" [disabled]="loading() || signupForm.invalid">
+      <button mat-raised-button color="primary" type="submit" class="submit-button full-width" [disabled]="loading()">
         {{ loading() ? 'Registracija...' : 'Registruj se' }}
       </button>
     </form>

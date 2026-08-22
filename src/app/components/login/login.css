@@ -31,3 +31,17 @@
   margin-top: 16px;
   font-size: 14px;
 }
+
+.submit-button {
+  background-color: #1F7A70;
+  color: #ffffff;
+}
+
+.submit-button:hover:not(:disabled) {
+  background-color: #005049;
+}
+
+.submit-button:disabled {
+  background-color: rgba(31, 122, 112, 0.4);
+  color: rgba(255, 255, 255, 0.7);
+}
