@@ -51,9 +51,9 @@ export class UserService {
         if (!user) {
             return 0;
         }
-        return UserService.reservations().filter(
-            (r) => r.userId === user.userId && r.status !== 'otkazano'
-        ).length;
+        return UserService.reservations()
+            .filter((r) => r.userId === user.userId && r.status !== 'otkazano')
+            .reduce((sum, r) => sum + r.quantity, 0);
     });
 
     private static loadCurrentUserFromStorage(): UserModel | null {
@@ -170,10 +170,27 @@ export class UserService {
         }
     }
 
-    static createReservation(toy: ToyModel): ReservationModel {
+    static createReservation(toy: ToyModel): { reservation: ReservationModel; merged: boolean } {
         const user = UserService.getCurrentUser();
         if (!user) {
             throw new Error('Morate biti prijavljeni da biste napravili rezervaciju.');
+        }
+
+        const reservations = UserService.reservations();
+        const existing = reservations.find(
+            (r) => r.userId === user.userId && r.toyId === toy.toyId && r.status === 'rezervisano'
+        );
+
+        if (existing) {
+            const updated = reservations.map((r) =>
+                r.reservationId === existing.reservationId ? { ...r, quantity: r.quantity + 1 } : r
+            );
+            saveReservations(updated);
+            UserService.reservations.set(updated);
+            const updatedReservation = updated.find(
+                (r) => r.reservationId === existing.reservationId
+            )!;
+            return { reservation: updatedReservation, merged: true };
         }
 
         const newReservation: ReservationModel = {
@@ -193,10 +210,10 @@ export class UserService {
             quantity: 1,
         };
 
-        const reservations = [...UserService.reservations(), newReservation];
-        saveReservations(reservations);
-        UserService.reservations.set(reservations);
-        return newReservation;
+        const updatedList = [...reservations, newReservation];
+        saveReservations(updatedList);
+        UserService.reservations.set(updatedList);
+        return { reservation: newReservation, merged: false };
     }
 
     static getReservationsForUser(userId: string): ReservationModel[] {

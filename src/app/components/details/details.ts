@@ -110,9 +110,14 @@ export class Details implements OnInit {
     }
 
     try {
-      UserService.createReservation(toy);
-      this.reservationMessage.set('Igračka je rezervisana i dodata u vašu korpu.');
-      this.snackBar.open('Igračka je dodata u korpu.', 'Zatvori', { duration: 3000 });
+      const { merged } = UserService.createReservation(toy);
+      if (merged) {
+        this.reservationMessage.set('Igračka je već u vašoj korpi — količina je povećana.');
+        this.snackBar.open('Količina u korpi je povećana.', 'Zatvori', { duration: 3000 });
+      } else {
+        this.reservationMessage.set('Igračka je rezervisana i dodata u vašu korpu.');
+        this.snackBar.open('Igračka je dodata u korpu.', 'Zatvori', { duration: 3000 });
+      }
     } catch (err) {
       this.reservationError.set(
         err instanceof Error ? err.message : 'Rezervacija nije uspela.'
