@@ -51,6 +51,30 @@
   margin: 0;
 }
 
+.reservation-description {
+  margin: 4px 0;
+  font-size: 14px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px 24px;
+  margin: 8px 0;
+}
+
+.meta-item {
+  display: flex;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.meta-label {
+  color: var(--mat-sys-on-surface-variant);
+  font-weight: 600;
+}
+
 .reservation-date {
   margin: 0;
   font-size: 13px;
@@ -74,8 +98,46 @@
   color: var(--mat-sys-tertiary);
 }
 
+.rating-row-readonly mat-icon {
+  color: var(--mat-sys-tertiary);
+}
+
+.rating-form {
+  padding: 12px;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--mat-sys-surface-container-low);
+}
+
+.rating-form .full-width {
+  width: 100%;
+}
+
+.rating-form-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rate-button {
+  background-color: rgba(242, 178, 51, 0.18);
+  border-color: rgba(242, 178, 51, 0.6);
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.remove-button {
+  background-color: rgba(192, 57, 43, 0.12);
+  border-color: rgba(192, 57, 43, 0.5);
+  color: rgba(0, 0, 0, 0.87);
+}
+
 .reservation-actions {
   margin-top: 8px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .status-rezervisano {
