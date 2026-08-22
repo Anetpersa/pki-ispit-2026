@@ -30,6 +30,7 @@ export class Signup {
   phone = signal('');
   address = signal('');
   password = signal('');
+  showPassword = signal(false);
   error = signal<string | null>(null);
   loading = signal(false);
   returnUrl: string | null = null;
@@ -44,6 +45,10 @@ export class Signup {
 
   goBack() {
     this.location.back();
+  }
+
+  toggleShowPassword() {
+    this.showPassword.set(!this.showPassword());
   }
 
   async onSubmit() {

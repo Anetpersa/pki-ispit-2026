@@ -26,6 +26,7 @@ import { UserService } from '../../../services/user.service';
 export class Login {
   email = signal('');
   password = signal('');
+  showPassword = signal(false);
   error = signal<string | null>(null);
   loading = signal(false);
   returnUrl: string | null = null;
@@ -40,6 +41,10 @@ export class Login {
 
   goBack() {
     this.location.back();
+  }
+
+  toggleShowPassword() {
+    this.showPassword.set(!this.showPassword());
   }
 
   async onSubmit() {

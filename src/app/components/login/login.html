@@ -15,7 +15,23 @@
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Lozinka</mat-label>
-        <input matInput type="password" [ngModel]="password()" (ngModelChange)="password.set($event)" name="password" required />
+        <input
+          matInput
+          [type]="showPassword() ? 'text' : 'password'"
+          [ngModel]="password()"
+          (ngModelChange)="password.set($event)"
+          name="password"
+          required
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          type="button"
+          (click)="toggleShowPassword()"
+          [attr.aria-label]="showPassword() ? 'Sakrij lozinku' : 'Prikaži lozinku'"
+        >
+          <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
       </mat-form-field>
 
       @if (error()) {
