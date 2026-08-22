@@ -6,6 +6,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
 import { FormsModule } from '@angular/forms';
 import { ToyModel } from '../../../models/toy.model';
 import { AgeGroupModel } from '../../../models/age-group.model';
@@ -23,8 +25,10 @@ import { ReviewService } from '../../../services/review.service';
     MatInputModule,
     MatSelectModule,
     MatButtonModule,
+    MatDatepickerModule,
     FormsModule,
   ],
+  providers: [provideNativeDateAdapter()],
   templateUrl: './catalog.html',
   styleUrl: './catalog.css',
 })
@@ -36,12 +40,14 @@ export class Catalog implements OnInit {
   error = signal<string | null>(null);
 
   readonly imageBaseUrl = 'https://toy.pequla.com';
+  readonly minProductionDate = new Date(2000, 0, 1);
+  readonly maxProductionDate = new Date();
 
   readonly targetGroupOptions = [
-    { value: '', label: 'Sve' },
-    { value: 'svi', label: 'Svi' },
-    { value: 'dečak', label: 'Dečak' },
-    { value: 'devojčica', label: 'Devojčica' },
+    { value: '', label: 'Sve ciljne grupe' },
+    { value: 'svi', label: 'Uniseks' },
+    { value: 'dečak', label: 'Dečaci' },
+    { value: 'devojčica', label: 'Devojčice' },
   ];
 
   searchTerm = signal('');
@@ -51,8 +57,8 @@ export class Catalog implements OnInit {
   selectedTargetGroup = signal<string>('');
   minPrice = signal<number | null>(null);
   maxPrice = signal<number | null>(null);
-  dateFrom = signal<string | null>(null);
-  dateTo = signal<string | null>(null);
+  dateFrom = signal<Date | null>(null);
+  dateTo = signal<Date | null>(null);
 
   filteredToys = computed(() => {
     const search = this.searchTerm().trim().toLowerCase();
@@ -92,10 +98,10 @@ export class Catalog implements OnInit {
       if (maxP != null && toy.price > maxP) {
         return false;
       }
-      if (dFrom && new Date(toy.productionDate) < new Date(dFrom)) {
+      if (dFrom && new Date(toy.productionDate).getTime() < dFrom.getTime()) {
         return false;
       }
-      if (dTo && new Date(toy.productionDate) > new Date(dTo)) {
+      if (dTo && new Date(toy.productionDate).getTime() > dTo.getTime()) {
         return false;
       }
       return true;

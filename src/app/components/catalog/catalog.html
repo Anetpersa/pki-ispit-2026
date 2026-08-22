@@ -61,27 +61,29 @@
         <div class="range-inputs">
           <mat-form-field appearance="outline" class="range-field">
             <mat-label>Od</mat-label>
-            <input matInput type="number" [ngModel]="minPrice()" (ngModelChange)="minPrice.set($event)" />
+            <input matInput type="number" [ngModel]="minPrice()" (ngModelChange)="minPrice.set($event)"
+              [ngModelOptions]="{updateOn: 'blur'}" />
           </mat-form-field>
           <mat-form-field appearance="outline" class="range-field">
             <mat-label>Do</mat-label>
-            <input matInput type="number" [ngModel]="maxPrice()" (ngModelChange)="maxPrice.set($event)" />
+            <input matInput type="number" [ngModel]="maxPrice()" (ngModelChange)="maxPrice.set($event)"
+              [ngModelOptions]="{updateOn: 'blur'}" />
           </mat-form-field>
         </div>
       </div>
 
       <div class="filter-group">
         <h3>Datum proizvodnje</h3>
-        <div class="range-inputs range-inputs-stacked">
-          <mat-form-field appearance="outline" class="range-field">
-            <mat-label>Od</mat-label>
-            <input matInput type="date" [ngModel]="dateFrom()" (ngModelChange)="dateFrom.set($event)" />
-          </mat-form-field>
-          <mat-form-field appearance="outline" class="range-field">
-            <mat-label>Do</mat-label>
-            <input matInput type="date" [ngModel]="dateTo()" (ngModelChange)="dateTo.set($event)" />
-          </mat-form-field>
-        </div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Od - Do</mat-label>
+          <mat-date-range-input [rangePicker]="productionDatePicker" [min]="minProductionDate"
+            [max]="maxProductionDate">
+            <input matStartDate [ngModel]="dateFrom()" (ngModelChange)="dateFrom.set($event)" placeholder="Od" />
+            <input matEndDate [ngModel]="dateTo()" (ngModelChange)="dateTo.set($event)" placeholder="Do" />
+          </mat-date-range-input>
+          <mat-datepicker-toggle matSuffix [for]="productionDatePicker"></mat-datepicker-toggle>
+          <mat-date-range-picker #productionDatePicker></mat-date-range-picker>
+        </mat-form-field>
       </div>
 
       <button mat-stroked-button class="clear-button" (click)="clearFilters()">
