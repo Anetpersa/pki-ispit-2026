@@ -43,7 +43,8 @@ nav {
 }
 
 .active-link {
-  font-weight: 700;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
 }
 
 .toolbar-search {
@@ -110,7 +111,6 @@ nav {
 
 .user-name {
   order: 1;
-  font-weight: 700;
   color: var(--mat-sys-on-primary);
   margin-right: 10px;
 }

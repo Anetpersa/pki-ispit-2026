@@ -18,6 +18,9 @@
           matBadgeColor="accent"
         >shopping_cart</mat-icon>
         Korpa
+        @if (cartCount() > 0) {
+        <span>({{ cartCount() }})</span>
+        }
       </a>
     </nav>
 
