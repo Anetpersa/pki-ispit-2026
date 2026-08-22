@@ -17,36 +17,36 @@
 <section id="kategorije" class="categories">
   <h2>Istraži po kategoriji</h2>
   @if (categories().length > 0) {
-    <div class="category-grid">
-      @for (cat of categories(); track cat.typeId) {
-        <a class="category-item" routerLink="/igracke">
-          <div class="category-circle">
-            <mat-icon>{{ cat.icon }}</mat-icon>
-          </div>
-          <span>{{ cat.name }}</span>
-        </a>
-      }
-    </div>
+  <div class="category-grid">
+    @for (cat of categories(); track cat.typeId) {
+    <a class="category-item" (click)="goToCategory(cat.typeId)">
+      <div class="category-circle">
+        <mat-icon>{{ cat.icon }}</mat-icon>
+      </div>
+      <span>{{ cat.name }}</span>
+    </a>
+    }
+  </div>
   }
 </section>
 
 @if (featuredToys().length > 0) {
-  <section class="featured">
-    <h2>⭐ Izdvojene igračke</h2>
-    <div class="featured-grid">
-      @for (toy of featuredToys(); track toy.toyId) {
-        <mat-card class="featured-card">
-          <img mat-card-image [src]="imageBaseUrl + toy.imageUrl" [alt]="toy.name" />
-          <mat-card-content>
-            <h3>{{ toy.name }}</h3>
-            <p class="age-range">Uzrast: {{ toy.ageGroup.name }}</p>
-            <p class="price">{{ toy.price }} RSD</p>
-          </mat-card-content>
-          <mat-card-actions>
-            <a mat-button [routerLink]="['/igracke', toy.permalink]">Detalji</a>
-          </mat-card-actions>
-        </mat-card>
-      }
-    </div>
-  </section>
+<section class="featured">
+  <h2>⭐ Izdvojene igračke</h2>
+  <div class="featured-grid">
+    @for (toy of featuredToys(); track toy.toyId) {
+    <mat-card class="featured-card">
+      <img mat-card-image [src]="imageBaseUrl + toy.imageUrl" [alt]="toy.name" />
+      <mat-card-content>
+        <h3>{{ toy.name }}</h3>
+        <p class="age-range">Uzrast: {{ toy.ageGroup.name }}</p>
+        <p class="price">{{ toy.price }} RSD</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <a mat-button [routerLink]="['/igracke', toy.permalink]">Detalji</a>
+      </mat-card-actions>
+    </mat-card>
+    }
+  </div>
+</section>
 }

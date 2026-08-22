@@ -1,11 +1,12 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { ToyModel } from '../../../models/toy.model';
 import { ToyTypeModel } from '../../../models/toy-type.model';
 import { ToyService } from '../../../services/toy.service';
+import { CatalogFilterService } from '../../../services/catalog-filter.service';
 
 interface CategoryDisplay {
   typeId: number;
@@ -37,6 +38,8 @@ export class Home implements OnInit {
   featuredToys = signal<ToyModel[]>([]);
   readonly imageBaseUrl = 'https://toy.pequla.com';
 
+  constructor(private router: Router) {}
+
   ngOnInit() {
     this.loadCategories();
     this.loadFeatured();
@@ -64,5 +67,10 @@ export class Home implements OnInit {
     } catch {
       this.featuredToys.set([]);
     }
+  }
+
+  goToCategory(typeId: number) {
+    CatalogFilterService.selectedTypeIds.set(new Set([typeId]));
+    this.router.navigateByUrl('/igracke');
   }
 }
