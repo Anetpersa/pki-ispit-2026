@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, signal } from '@angular/core';
+import { Component, OnInit, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -9,11 +9,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { FormsModule } from '@angular/forms';
+import { signal } from '@angular/core';
 import { ToyModel } from '../../../models/toy.model';
 import { AgeGroupModel } from '../../../models/age-group.model';
 import { ToyTypeModel } from '../../../models/toy-type.model';
 import { ToyService } from '../../../services/toy.service';
 import { ReviewService } from '../../../services/review.service';
+import { CatalogFilterService } from '../../../services/catalog-filter.service';
+import { TARGET_GROUP_LABELS } from '../../../utils/target-group.util';
 
 @Component({
   selector: 'app-catalog',
@@ -45,20 +48,18 @@ export class Catalog implements OnInit {
 
   readonly targetGroupOptions = [
     { value: '', label: 'Sve ciljne grupe' },
-    { value: 'svi', label: 'Uniseks' },
-    { value: 'dečak', label: 'Dečaci' },
-    { value: 'devojčica', label: 'Devojčice' },
+    ...Object.entries(TARGET_GROUP_LABELS).map(([value, label]) => ({ value, label })),
   ];
 
-  searchTerm = signal('');
-  reviewSearchTerm = signal('');
-  selectedTypeIds = signal<Set<number>>(new Set());
-  selectedAgeGroupIds = signal<Set<number>>(new Set());
-  selectedTargetGroup = signal<string>('');
-  minPrice = signal<number | null>(null);
-  maxPrice = signal<number | null>(null);
-  dateFrom = signal<Date | null>(null);
-  dateTo = signal<Date | null>(null);
+  searchTerm = CatalogFilterService.searchTerm;
+  reviewSearchTerm = CatalogFilterService.reviewSearchTerm;
+  selectedTypeIds = CatalogFilterService.selectedTypeIds;
+  selectedAgeGroupIds = CatalogFilterService.selectedAgeGroupIds;
+  selectedTargetGroup = CatalogFilterService.selectedTargetGroup;
+  minPrice = CatalogFilterService.minPrice;
+  maxPrice = CatalogFilterService.maxPrice;
+  dateFrom = CatalogFilterService.dateFrom;
+  dateTo = CatalogFilterService.dateTo;
 
   filteredToys = computed(() => {
     const search = this.searchTerm().trim().toLowerCase();
@@ -135,7 +136,6 @@ export class Catalog implements OnInit {
       this.ageGroups.set(ageGroupsRes.data);
       this.types.set(typesRes.data);
     } catch (err) {
-      // filteri su sekundarni - ne blokiramo prikaz igračaka ako ovo padne
       console.error('Greška pri učitavanju filtera', err);
     }
   }
@@ -161,14 +161,6 @@ export class Catalog implements OnInit {
   }
 
   clearFilters() {
-    this.searchTerm.set('');
-    this.reviewSearchTerm.set('');
-    this.selectedTypeIds.set(new Set());
-    this.selectedAgeGroupIds.set(new Set());
-    this.selectedTargetGroup.set('');
-    this.minPrice.set(null);
-    this.maxPrice.set(null);
-    this.dateFrom.set(null);
-    this.dateTo.set(null);
+    CatalogFilterService.clear();
   }
 }

@@ -42,7 +42,7 @@ export class Details implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private snackBar: MatSnackBar
-  ) {}
+  ) { }
 
   get isLoggedIn(): boolean {
     return UserService.getCurrentUser() !== null;
@@ -100,7 +100,7 @@ export class Details implements OnInit {
     this.reservationMessage.set(null);
 
     if (!this.isLoggedIn) {
-      this.router.navigateByUrl('/login');
+      this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
       return;
     }
 

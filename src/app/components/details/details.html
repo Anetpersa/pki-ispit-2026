@@ -1,104 +1,107 @@
 <div class="details-page">
-    @if (loading()) {
-    <p>Učitavanje...</p>
-    }
+  @if (loading()) {
+  <p>Učitavanje...</p>
+  }
 
-    @if (error()) {
-    <p class="error">{{ error() }}</p>
-    }
+  @if (error()) {
+  <p class="error">{{ error() }}</p>
+  }
 
-    @if (!loading() && !error() && toy(); as toy) {
-    <div class="details-layout">
-        <div class="toy-image-col">
-            <img [src]="imageBaseUrl + toy.imageUrl" [alt]="toy.name" class="toy-image" />
-        </div>
+  @if (!loading() && !error() && toy(); as toy) {
+  <a routerLink="/igracke" class="back-link">
+    <mat-icon>arrow_back</mat-icon>
+    Nazad na igračke
+  </a>
 
-        <div class="toy-info-col">
-            <a routerLink="/igracke" class="back-link">← Nazad na igračke</a>
-
-            <h1>{{ toy.name }}</h1>
-
-            <div class="average-rating">
-                @for (star of stars; track star) {
-                <mat-icon>{{ averageStarIcon(star) }}</mat-icon>
-                }
-                @if (averageRating(); as avg) {
-                <span>{{ avg }} / 5</span>
-                <span class="review-count">({{ reviews().length }} recenzija)</span>
-                } @else {
-                <span class="review-count">Još uvek nema recenzija</span>
-                }
-            </div>
-
-            <p class="description">{{ toy.description }}</p>
-
-            <div class="meta-grid">
-                <div class="meta-item">
-                    <span class="meta-label">Tip:</span>
-                    <span>{{ toy.type.name }}</span>
-                </div>
-                <div class="meta-item">
-                    <span class="meta-label">Uzrast:</span>
-                    <span>{{ toy.ageGroup.name }}</span>
-                </div>
-                <div class="meta-item">
-                    <span class="meta-label">Ciljna grupa:</span>
-                    <span>{{ targetGroupLabel(toy.targetGroup) }}</span>
-                </div>
-                <div class="meta-item">
-                    <span class="meta-label">Datum proizvodnje:</span>
-                    <span>{{ toy.productionDate | date: 'dd.MM.yyyy.' }}</span>
-                </div>
-            </div>
-
-            <p class="price">{{ toy.price }} RSD</p>
-
-            @if (reservationMessage()) {
-            <p class="success">{{ reservationMessage() }}</p>
-            }
-            @if (reservationError()) {
-            <p class="error">{{ reservationError() }}</p>
-            }
-
-            <button mat-raised-button color="primary" class="reserve-button" (click)="onReserve()">
-                <mat-icon>shopping_cart</mat-icon>
-                Rezerviši
-            </button>
-        </div>
+  <div class="details-layout">
+    <div class="toy-image-col">
+      <img [src]="imageBaseUrl + toy.imageUrl" [alt]="toy.name" class="toy-image" />
     </div>
 
-    <section class="reviews-section">
-        <h2>Recenzije</h2>
+    <div class="toy-info-col">
+      <h1>{{ toy.name }}</h1>
 
-        <p class="reviews-hint">
-            Recenziju je moguće ostaviti isključivo za igračke koje ste rezervisali i koje imaju
-            status <strong>pristiglo</strong> - to se radi na stranici
-            <a routerLink="/cart">Korpa</a>.
-        </p>
-
-        @if (reviews().length === 0) {
-        <p class="no-reviews">Još uvek nema recenzija za ovu igračku.</p>
+      <div class="average-rating">
+        @for (star of stars; track star) {
+        <mat-icon>{{ averageStarIcon(star) }}</mat-icon>
         }
+        @if (averageRating(); as avg) {
+        <span>{{ avg }} / 5</span>
+        <span class="review-count">({{ reviews().length }} recenzija)</span>
+        } @else {
+        <span class="review-count">Još uvek nema recenzija</span>
+        }
+      </div>
 
-        <div class="review-list">
-            @for (review of reviews(); track review.reviewId) {
-            <mat-card class="review-card">
-                <div class="review-header">
-                    <span class="review-author">
-                        {{ review.authorName }}
-                        <span class="review-author-type">({{ review.authorType }})</span>
-                    </span>
-                    <span class="review-stars">
-                        @for (star of stars; track star) {
-                        <mat-icon>{{ review.rating >= star ? 'star' : 'star_border' }}</mat-icon>
-                        }
-                    </span>
-                </div>
-                <p class="review-comment">{{ review.comment }}</p>
-                <p class="review-date">{{ review.date | date: 'dd.MM.yyyy.' }}</p>
-            </mat-card>
-            }
+      <p class="description">{{ toy.description }}</p>
+
+      <div class="meta-grid">
+        <div class="meta-item">
+          <span class="meta-label">Tip:</span>
+          <span>{{ toy.type.name }}</span>
         </div>
-    </section>
+        <div class="meta-item">
+          <span class="meta-label">Uzrast:</span>
+          <span>{{ toy.ageGroup.name }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Ciljna grupa:</span>
+          <span>{{ targetGroupLabel(toy.targetGroup) }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Datum proizvodnje:</span>
+          <span>{{ toy.productionDate | date: 'dd.MM.yyyy.' }}</span>
+        </div>
+      </div>
+
+      <p class="price">{{ toy.price }} RSD</p>
+
+      @if (reservationMessage()) {
+      <p class="success">{{ reservationMessage() }}</p>
+      }
+      @if (reservationError()) {
+      <p class="error">{{ reservationError() }}</p>
+      }
+
+      <button mat-raised-button color="primary" class="reserve-button" (click)="onReserve()">
+        <mat-icon>shopping_cart</mat-icon>
+        Rezerviši
+      </button>
+    </div>
+  </div>
+
+  <section class="reviews-section">
+    <h2>Recenzije</h2>
+
+    <p class="reviews-hint">
+      Recenziju je moguće ostaviti isključivo za igračke koje ste rezervisali i koje imaju
+      status <strong>pristiglo</strong> - to se radi na stranici
+      <a routerLink="/cart">Korpa</a>.
+    </p>
+
+    @if (reviews().length === 0) {
+    <p class="no-reviews">Još uvek nema recenzija za ovu igračku.</p>
     }
+
+    <div class="review-list">
+      @for (review of reviews(); track review.reviewId) {
+      <mat-card class="review-card">
+        <div class="review-header">
+          <span class="review-author">
+            {{ review.authorName }}
+            <span class="review-author-type">({{ review.authorType }})</span>
+          </span>
+          <span class="review-stars">
+            @for (star of stars; track star) {
+            <mat-icon>{{ review.rating >= star ? 'star' : 'star_border' }}</mat-icon>
+            }
+          </span>
+        </div>
+        <p class="review-comment">{{ review.comment }}</p>
+        <p class="review-date">{{ review.date | date: 'dd.MM.yyyy.' }}</p>
+      </mat-card>
+      }
+    </div>
+  </section>
+  }
 </div>

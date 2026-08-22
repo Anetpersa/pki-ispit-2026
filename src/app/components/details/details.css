@@ -25,11 +25,22 @@
 }
 
 .back-link {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   margin-bottom: 16px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background-color: var(--mat-sys-secondary-container);
+  color: rgba(0, 0, 0, 0.87);
   font-size: 14px;
-  color: var(--mat-sys-primary);
   text-decoration: none;
+}
+
+.back-link mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
 }
 
 .toy-info-col h1 {

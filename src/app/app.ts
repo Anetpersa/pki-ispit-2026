@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
 import { UserService } from '../services/user.service';
+import { CatalogFilterService } from '../services/catalog-filter.service';
 
 @Component({
   selector: 'app-root',
@@ -31,6 +32,7 @@ export class App {
 
   logout() {
     UserService.logout();
+    CatalogFilterService.clear();
     this.router.navigateByUrl('/');
   }
 }

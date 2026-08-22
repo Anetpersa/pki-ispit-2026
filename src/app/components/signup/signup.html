@@ -1,5 +1,10 @@
 <div class="auth-page">
   <mat-card class="auth-card">
+    <button mat-button type="button" class="back-link" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+      Nazad
+    </button>
+
     <h1>Registracija</h1>
 
     <form (ngSubmit)="onSubmit()" autocomplete="off">
@@ -43,7 +48,7 @@
     </form>
 
     <p class="switch-link">
-      Već imate nalog? <a routerLink="/login">Prijavite se</a>
+      Već imate nalog? <a routerLink="/login" [queryParams]="returnUrl ? { returnUrl: returnUrl } : {}">Prijavite se</a>
     </p>
   </mat-card>
 </div>
