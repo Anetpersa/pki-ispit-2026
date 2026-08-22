@@ -13,20 +13,14 @@
   <div class="reservation-list">
     @for (reservation of reservations(); track reservation.reservationId) {
     <mat-card class="reservation-card" [class.reservation-cancelled]="reservation.status === 'otkazano'">
-      <img
-        class="reservation-image"
-        [src]="imageBaseUrl + reservation.toyImageUrl"
-        [alt]="reservation.toyName"
-      />
+      <img class="reservation-image" [src]="imageBaseUrl + reservation.toyImageUrl" [alt]="reservation.toyName" />
 
       <div class="reservation-body">
         <div class="reservation-header">
           <h3>{{ reservation.toyName }}</h3>
-          <mat-chip
-            [class.status-rezervisano]="reservation.status === 'rezervisano'"
+          <mat-chip [class.status-rezervisano]="reservation.status === 'rezervisano'"
             [class.status-pristiglo]="reservation.status === 'pristiglo'"
-            [class.status-otkazano]="reservation.status === 'otkazano'"
-          >
+            [class.status-otkazano]="reservation.status === 'otkazano'">
             {{ statusLabel(reservation.status) }}
           </mat-chip>
         </div>
@@ -61,22 +55,12 @@
 
           @if (reservation.status === 'rezervisano') {
           <div class="quantity-control">
-            <button
-              class="qty-btn"
-              type="button"
-              (click)="decreaseQuantity(reservation)"
-              [disabled]="reservation.quantity <= 1"
-              aria-label="Smanji količinu"
-            >
+            <button class="qty-btn" type="button" (click)="decreaseQuantity(reservation)"
+              [disabled]="reservation.quantity <= 1" aria-label="Smanji količinu">
               −
             </button>
             <span class="quantity-value">{{ reservation.quantity }}</span>
-            <button
-              class="qty-btn"
-              type="button"
-              (click)="increaseQuantity(reservation)"
-              aria-label="Povećaj količinu"
-            >
+            <button class="qty-btn" type="button" (click)="increaseQuantity(reservation)" aria-label="Povećaj količinu">
               +
             </button>
           </div>
@@ -88,59 +72,51 @@
         </div>
 
         @if (reservation.status === 'pristiglo') {
-          @if (reservation.rating != null) {
-          <div class="rating-row rating-row-readonly">
-            <span>Vaša ocena:</span>
+        @if (reservation.rating != null) {
+        <div class="rating-row rating-row-readonly">
+          <span>Vaša ocena:</span>
+          @for (star of stars; track star) {
+          <mat-icon>{{ reservation.rating! >= star ? 'star' : 'star_border' }}</mat-icon>
+          }
+        </div>
+        } @else if (ratingForReservationId() === reservation.reservationId) {
+        <mat-card class="rating-form">
+          <div class="rating-row">
+            <span>Ocena:</span>
             @for (star of stars; track star) {
-            <mat-icon>{{ reservation.rating! >= star ? 'star' : 'star_border' }}</mat-icon>
+            <mat-icon class="star" (click)="setNewRating(star)">
+              {{ newRating() >= star ? 'star' : 'star_border' }}
+            </mat-icon>
             }
           </div>
-          } @else if (ratingForReservationId() === reservation.reservationId) {
-          <mat-card class="rating-form">
-            <div class="rating-row">
-              <span>Ocena:</span>
-              @for (star of stars; track star) {
-              <mat-icon class="star" (click)="setNewRating(star)">
-                {{ newRating() >= star ? 'star' : 'star_border' }}
-              </mat-icon>
-              }
-            </div>
 
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Recenziju ostavlja</mat-label>
-              <mat-select [ngModel]="newReviewAuthorType()" (ngModelChange)="newReviewAuthorType.set($event)">
-                <mat-option value="roditelj">Roditelj</mat-option>
-                <mat-option value="dete">Dete</mat-option>
-              </mat-select>
-            </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Recenziju ostavlja</mat-label>
+            <mat-select [ngModel]="newReviewAuthorType()" (ngModelChange)="newReviewAuthorType.set($event)">
+              <mat-option value="roditelj">Roditelj</mat-option>
+              <mat-option value="dete">Dete</mat-option>
+            </mat-select>
+          </mat-form-field>
 
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Komentar</mat-label>
-              <textarea
-                matInput
-                rows="2"
-                [ngModel]="newReviewComment()"
-                (ngModelChange)="newReviewComment.set($event)"
-              ></textarea>
-            </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Komentar</mat-label>
+            <textarea matInput rows="2" [ngModel]="newReviewComment()"
+              (ngModelChange)="newReviewComment.set($event)"></textarea>
+          </mat-form-field>
 
-            @if (ratingError()) {
-            <p class="error">{{ ratingError() }}</p>
-            }
-
-            <div class="rating-form-actions">
-              <button
-                mat-raised-button
-                color="primary"
-                (click)="submitRating(reservation)"
-                [disabled]="submittingRating()"
-              >
-                {{ submittingRating() ? 'Slanje...' : 'Sačuvaj ocenu' }}
-              </button>
-              <button mat-button (click)="closeRatingForm()">Otkaži</button>
-            </div>
-          </mat-card>
+          @if (ratingError()) {
+          <p class="error">{{ ratingError() }}</p>
           }
+
+          <div class="rating-form-actions">
+            <button mat-stroked-button class="save-review-button" (click)="submitRating(reservation)"
+              [disabled]="submittingRating()">
+              {{ submittingRating() ? 'Slanje...' : 'Ostavi recenziju' }}
+            </button>
+            <button mat-button (click)="closeRatingForm()">Otkaži</button>
+          </div>
+        </mat-card>
+        }
         }
 
         <div class="reservation-actions">
@@ -154,12 +130,12 @@
           </button>
           }
           @if (reservation.status === 'pristiglo') {
-            @if (reservation.rating == null && ratingForReservationId() !== reservation.reservationId) {
-            <button mat-stroked-button class="rate-button" (click)="openRatingForm(reservation.reservationId)">
-              <mat-icon>star_rate</mat-icon>
-              Oceni igračku
-            </button>
-            }
+          @if (reservation.rating == null && ratingForReservationId() !== reservation.reservationId) {
+          <button mat-stroked-button class="rate-button" (click)="openRatingForm(reservation.reservationId)">
+            <mat-icon>star_rate</mat-icon>
+            Oceni igračku
+          </button>
+          }
           <button mat-stroked-button class="remove-button" (click)="removeFromCart(reservation.reservationId)">
             Ukloni iz korpe
           </button>

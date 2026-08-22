@@ -189,6 +189,16 @@
   color: rgba(0, 0, 0, 0.87);
 }
 
+.save-review-button {
+  background-color: rgba(31, 122, 112, 0.18);
+  border-color: rgba(31, 122, 112, 0.6);
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.save-review-button:disabled {
+  opacity: 0.5;
+}
+
 .remove-button {
   background-color: rgba(192, 57, 43, 0.12);
   border-color: rgba(192, 57, 43, 0.5);
