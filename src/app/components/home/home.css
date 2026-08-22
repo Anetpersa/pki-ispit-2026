@@ -8,7 +8,7 @@
 .hero {
   position: relative;
   overflow: hidden;
-  max-width: 1400px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 28px 24px;
   background: var(--mat-sys-tertiary-container);
@@ -119,7 +119,7 @@
 }
 
 .categories {
-  max-width: 1400px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 0 24px;
   text-align: center;
@@ -169,7 +169,7 @@
 }
 
 .featured {
-  max-width: 1400px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 0 24px 24px;
   text-align: center;
