@@ -1,0 +1,74 @@
+<svg width="1000" height="360" viewBox="0 0 1000 360" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- confetti dots -->
+  <circle cx="40" cy="60" r="7" fill="#e66b60" opacity="0.5"/>
+  <circle cx="120" cy="30" r="5" fill="#1F7A70" opacity="0.45"/>
+  <circle cx="960" cy="50" r="6" fill="#1F7A70" opacity="0.4"/>
+  <circle cx="30" cy="300" r="6" fill="#F2B233" opacity="0.55"/>
+  <circle cx="500" cy="30" r="5" fill="#e66b60" opacity="0.4"/>
+  <circle cx="850" cy="310" r="7" fill="#e66b60" opacity="0.45"/>
+
+  <!-- stacking rings, far left -->
+  <g transform="translate(90,270)">
+    <ellipse cx="0" cy="18" rx="42" ry="13" fill="#e66b60"/>
+    <ellipse cx="0" cy="0" rx="33" ry="10" fill="#F2B233"/>
+    <ellipse cx="0" cy="-13" rx="22" ry="8" fill="#1F7A70"/>
+    <rect x="-3" y="-28" width="6" height="10" rx="3" fill="#c9a25a"/>
+  </g>
+
+  <!-- teddy bear -->
+  <g transform="translate(260,180)">
+    <ellipse cx="0" cy="70" rx="40" ry="44" fill="#c98a4a"/>
+    <circle cx="-27" cy="20" r="15" fill="#c98a4a"/>
+    <circle cx="27" cy="20" r="15" fill="#c98a4a"/>
+    <circle cx="-27" cy="20" r="7" fill="#a8703a"/>
+    <circle cx="27" cy="20" r="7" fill="#a8703a"/>
+    <circle cx="-13" cy="58" r="5.5" fill="#3a2a1e"/>
+    <circle cx="13" cy="58" r="5.5" fill="#3a2a1e"/>
+    <ellipse cx="0" cy="76" rx="9" ry="6" fill="#a8703a"/>
+    <circle cx="0" cy="64" r="2.5" fill="#3a2a1e"/>
+    <path d="M-6,78 Q0,84 6,78" stroke="#3a2a1e" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- central open toy box, tilted -->
+  <g transform="translate(440,130) rotate(-3)">
+    <rect x="0" y="80" width="230" height="150" rx="14" fill="#1F7A70"/>
+    <rect x="0" y="80" width="115" height="150" rx="14" fill="#175f58"/>
+    <rect x="115" y="80" width="115" height="150" rx="14" fill="#1F7A70"/>
+    <rect x="108" y="80" width="14" height="150" fill="#0f4740"/>
+    <polygon points="0,84 -28,15 82,15 115,84" fill="#e66b60"/>
+    <polygon points="230,84 258,15 148,15 115,84" fill="#F2B233"/>
+    <g transform="translate(58,155)">
+      <path d="M0,-23 L6,-7 L23,-7 L10,3 L15,21 L0,10 L-15,21 L-10,3 L-23,-7 L-6,-7 Z" fill="#F2B233"/>
+    </g>
+  </g>
+
+  <!-- toy blocks -->
+  <g transform="translate(760,290)">
+    <rect x="-36" y="-8" width="36" height="36" rx="5" fill="#1F7A70"/>
+    <rect x="4" y="-8" width="36" height="36" rx="5" fill="#F2B233"/>
+    <rect x="-16" y="-42" width="36" height="36" rx="5" fill="#e66b60"/>
+    <text x="-8" y="14" font-family="sans-serif" font-size="17" font-weight="700" fill="#fdf3e7">A</text>
+    <text x="14" y="14" font-family="sans-serif" font-size="17" font-weight="700" fill="#fdf3e7">B</text>
+    <text x="-4" y="-19" font-family="sans-serif" font-size="17" font-weight="700" fill="#fdf3e7">C</text>
+  </g>
+
+  <!-- rocket, far right -->
+  <g transform="translate(900,150) rotate(18)">
+    <ellipse cx="0" cy="0" rx="13" ry="34" fill="#e66b60"/>
+    <polygon points="-13,-3 0,-42 13,-3" fill="#F2B233"/>
+    <polygon points="-13,20 -28,40 -8,31" fill="#1F7A70"/>
+    <polygon points="13,20 28,40 8,31" fill="#1F7A70"/>
+    <circle cx="0" cy="-4" r="7" fill="#fdf3e7"/>
+    <ellipse cx="0" cy="39" rx="7" ry="11" fill="#F2B233" opacity="0.85"/>
+  </g>
+
+  <!-- small dino, bottom right of box -->
+  <g transform="translate(630,300) scale(0.75)">
+    <ellipse cx="0" cy="0" rx="34" ry="20" fill="#1F7A70"/>
+    <circle cx="-30" cy="-10" r="14" fill="#1F7A70"/>
+    <polygon points="0,-16 8,-32 16,-16" fill="#0f4740"/>
+    <polygon points="14,-14 22,-30 30,-14" fill="#0f4740"/>
+    <circle cx="-34" cy="-14" r="2.5" fill="#fdf3e7"/>
+  </g>
+</svg>
