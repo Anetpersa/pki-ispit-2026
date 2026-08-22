@@ -81,9 +81,71 @@
   color: var(--mat-sys-on-surface-variant);
 }
 
-.reservation-price {
+.line-total {
   margin: 0;
+  margin-left: auto;
   font-weight: 600;
+}
+
+.line-total-label {
+  font-weight: 400;
+  color: var(--mat-sys-on-surface-variant);
+  margin-right: 4px;
+}
+
+.reservation-price-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 4px 0;
+  flex-wrap: wrap;
+}
+
+.unit-price {
+  font-size: 13px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.quantity-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.qty-btn {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 50%;
+  background: var(--mat-sys-surface-container-low);
+  color: var(--mat-sys-on-surface);
+  font-size: 16px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.qty-btn:hover:not(:disabled) {
+  background: var(--mat-sys-surface-container-high);
+}
+
+.qty-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.quantity-value {
+  min-width: 16px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.quantity-readonly {
+  font-size: 13px;
+  color: var(--mat-sys-on-surface-variant);
 }
 
 .rating-row {

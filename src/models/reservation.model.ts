@@ -14,5 +14,6 @@ export interface ReservationModel {
   toyImageUrl: string;
   status: ReservationStatus;
   reservationDate: string;
+  quantity: number;
   rating?: number;
 }

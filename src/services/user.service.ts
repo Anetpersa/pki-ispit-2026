@@ -30,7 +30,11 @@ function saveUsers(users: UserModel[]): void {
 
 function loadReservationsFromStorage(): ReservationModel[] {
     const raw = localStorage.getItem(RESERVATIONS_KEY);
-    return raw ? JSON.parse(raw) : [];
+    if (!raw) {
+        return [];
+    }
+    const parsed: ReservationModel[] = JSON.parse(raw);
+    return parsed.map((r) => ({ ...r, quantity: r.quantity ?? 1 }));
 }
 
 function saveReservations(reservations: ReservationModel[]): void {
@@ -186,6 +190,7 @@ export class UserService {
             toyImageUrl: toy.imageUrl,
             status: 'rezervisano',
             reservationDate: new Date().toISOString(),
+            quantity: 1,
         };
 
         const reservations = [...UserService.reservations(), newReservation];
@@ -217,6 +222,18 @@ export class UserService {
     static updateReservationStatus(reservationId: string, status: ReservationStatus): void {
         UserService.updateReservation(reservationId, (reservation) => {
             reservation.status = status;
+        });
+    }
+
+    static updateReservationQuantity(reservationId: string, quantity: number): void {
+        if (!Number.isInteger(quantity) || quantity < 1) {
+            throw new Error('Količina mora biti ceo broj veći od nule.');
+        }
+        UserService.updateReservation(reservationId, (reservation) => {
+            if (reservation.status !== 'rezervisano') {
+                throw new Error('Količina se može menjati samo za rezervacije sa statusom "rezervisano".');
+            }
+            reservation.quantity = quantity;
         });
     }
 

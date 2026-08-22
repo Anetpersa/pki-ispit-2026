@@ -55,7 +55,37 @@
         <p class="reservation-date">
           Rezervisano: {{ reservation.reservationDate | date: 'dd.MM.yyyy.' }}
         </p>
-        <p class="reservation-price">{{ reservation.toyPrice }} RSD</p>
+
+        <div class="reservation-price-row">
+          <span class="unit-price">{{ reservation.toyPrice }} RSD / kom.</span>
+
+          @if (reservation.status === 'rezervisano') {
+          <div class="quantity-control">
+            <button
+              class="qty-btn"
+              type="button"
+              (click)="decreaseQuantity(reservation)"
+              [disabled]="reservation.quantity <= 1"
+              aria-label="Smanji količinu"
+            >
+              −
+            </button>
+            <span class="quantity-value">{{ reservation.quantity }}</span>
+            <button
+              class="qty-btn"
+              type="button"
+              (click)="increaseQuantity(reservation)"
+              aria-label="Povećaj količinu"
+            >
+              +
+            </button>
+          </div>
+          } @else {
+          <span class="quantity-readonly">Količina: {{ reservation.quantity }}</span>
+          }
+
+          <span class="line-total"><span class="line-total-label">Ukupno:</span> {{ lineTotal(reservation) }} RSD</span>
+        </div>
 
         @if (reservation.status === 'pristiglo') {
           @if (reservation.rating != null) {

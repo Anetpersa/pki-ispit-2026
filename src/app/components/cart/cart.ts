@@ -43,7 +43,7 @@ export class Cart implements OnInit {
   totalPrice = computed(() =>
     this.reservations()
       .filter((r) => r.status !== 'otkazano')
-      .reduce((sum, r) => sum + r.toyPrice, 0)
+      .reduce((sum, r) => sum + r.toyPrice * r.quantity, 0)
   );
 
   ratingForReservationId = signal<string | null>(null);
@@ -106,6 +106,33 @@ export class Cart implements OnInit {
       this.loadReservations();
     } catch (err) {
       this.errorMessage.set(err instanceof Error ? err.message : 'Brisanje nije uspelo.');
+    }
+  }
+
+  lineTotal(reservation: ReservationModel): number {
+    return reservation.toyPrice * reservation.quantity;
+  }
+
+  increaseQuantity(reservation: ReservationModel) {
+    this.setQuantity(reservation, reservation.quantity + 1);
+  }
+
+  decreaseQuantity(reservation: ReservationModel) {
+    this.setQuantity(reservation, reservation.quantity - 1);
+  }
+
+  setQuantity(reservation: ReservationModel, quantity: number) {
+    if (quantity < 1) {
+      return;
+    }
+    this.errorMessage.set(null);
+    try {
+      UserService.updateReservationQuantity(reservation.reservationId, quantity);
+      this.loadReservations();
+    } catch (err) {
+      this.errorMessage.set(
+        err instanceof Error ? err.message : 'Izmena količine nije uspela.'
+      );
     }
   }
 
