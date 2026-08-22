@@ -1,0 +1,196 @@
+.details-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.details-layout {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.toy-image-col {
+  flex: 0 0 360px;
+}
+
+.toy-image {
+  width: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.toy-info-col {
+  flex: 1;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: var(--mat-sys-primary);
+  text-decoration: none;
+}
+
+.toy-info-col h1 {
+  margin: 0 0 8px;
+}
+
+.average-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--mat-sys-tertiary);
+  margin-bottom: 12px;
+}
+
+.average-rating mat-icon {
+  color: var(--mat-sys-tertiary);
+}
+
+.review-count {
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 13px;
+}
+
+.description {
+  margin: 0 0 16px;
+  line-height: 1.5;
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px 24px;
+  margin-bottom: 16px;
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.meta-label {
+  font-size: 12px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.price {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 16px;
+}
+
+.reserve-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.success {
+  color: var(--mat-sys-primary);
+  font-size: 14px;
+}
+
+.error {
+  color: var(--mat-sys-error);
+  font-size: 14px;
+}
+
+.reviews-section {
+  margin-top: 48px;
+}
+
+.no-reviews {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.review-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.review-card {
+  padding: 16px;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.review-author {
+  font-weight: 600;
+}
+
+.review-author-type {
+  font-weight: 400;
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 13px;
+}
+
+.review-stars mat-icon {
+  color: var(--mat-sys-tertiary);
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+  vertical-align: middle;
+}
+
+.review-comment {
+  margin: 0 0 4px;
+}
+
+.review-date {
+  margin: 0;
+  font-size: 12px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.add-review-card {
+  padding: 24px;
+  max-width: 480px;
+}
+
+.add-review-card h3 {
+  margin: 0 0 16px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.rating-picker {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.rating-picker .star {
+  cursor: pointer;
+  color: var(--mat-sys-tertiary);
+}
+
+.login-prompt {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+@media (max-width: 720px) {
+  .details-layout {
+    flex-direction: column;
+  }
+
+  .toy-image-col {
+    flex: none;
+    width: 100%;
+  }
+
+  .meta-grid {
+    grid-template-columns: 1fr;
+  }
+}

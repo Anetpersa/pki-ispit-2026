@@ -45,7 +45,7 @@
             <p class="price">{{ toy.price }} RSD</p>
           </mat-card-content>
           <mat-card-actions>
-            <a mat-button routerLink="/igracke">Detalji</a>
+            <a mat-button [routerLink]="['/igracke', toy.permalink]">Detalji</a>
           </mat-card-actions>
         </mat-card>
       }

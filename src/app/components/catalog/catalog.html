@@ -20,6 +20,12 @@
           placeholder="Naziv ili opis..." />
       </mat-form-field>
 
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Pretraga po recenzijama</mat-label>
+        <input matInput [ngModel]="reviewSearchTerm()" (ngModelChange)="reviewSearchTerm.set($event)"
+          placeholder="Reč iz komentara recenzije..." />
+      </mat-form-field>
+
       <div class="filter-group">
         <h3>Tip</h3>
         @for (type of types(); track type.typeId) {
@@ -92,7 +98,7 @@
 
       <div class="toy-grid">
         @for (toy of filteredToys(); track toy.toyId) {
-        <mat-card class="toy-card">
+        <mat-card class="toy-card" [routerLink]="['/igracke', toy.permalink]">
           <img mat-card-image [src]="imageBaseUrl + toy.imageUrl" [alt]="toy.name" />
           <mat-card-header>
             <mat-card-title>{{ toy.name }}</mat-card-title>

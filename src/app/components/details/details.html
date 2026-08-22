@@ -1,0 +1,144 @@
+<div class="details-page">
+  @if (loading()) {
+  <p>Učitavanje...</p>
+  }
+
+  @if (error()) {
+  <p class="error">{{ error() }}</p>
+  }
+
+  @if (!loading() && !error() && toy(); as toy) {
+  <div class="details-layout">
+    <div class="toy-image-col">
+      <img [src]="imageBaseUrl + toy.imageUrl" [alt]="toy.name" class="toy-image" />
+    </div>
+
+    <div class="toy-info-col">
+      <a routerLink="/igracke" class="back-link">← Nazad na igračke</a>
+
+      <h1>{{ toy.name }}</h1>
+
+      @if (averageRating(); as avg) {
+      <div class="average-rating">
+        <mat-icon>star</mat-icon>
+        <span>{{ avg }} / 5</span>
+        <span class="review-count">({{ reviews().length }} recenzija)</span>
+      </div>
+      }
+
+      <p class="description">{{ toy.description }}</p>
+
+      <div class="meta-grid">
+        <div class="meta-item">
+          <span class="meta-label">Tip</span>
+          <span>{{ toy.type.name }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Uzrast</span>
+          <span>{{ toy.ageGroup.name }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Ciljna grupa</span>
+          <span>{{ toy.targetGroup }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Datum proizvodnje</span>
+          <span>{{ toy.productionDate | date: 'dd.MM.yyyy.' }}</span>
+        </div>
+      </div>
+
+      <p class="price">{{ toy.price }} RSD</p>
+
+      @if (reservationMessage()) {
+      <p class="success">{{ reservationMessage() }}</p>
+      }
+      @if (reservationError()) {
+      <p class="error">{{ reservationError() }}</p>
+      }
+
+      <button mat-raised-button color="primary" class="reserve-button" (click)="onReserve()">
+        <mat-icon>shopping_cart</mat-icon>
+        Rezerviši
+      </button>
+    </div>
+  </div>
+
+  <section class="reviews-section">
+    <h2>Recenzije</h2>
+
+    @if (reviews().length === 0) {
+    <p class="no-reviews">Još uvek nema recenzija za ovu igračku.</p>
+    }
+
+    <div class="review-list">
+      @for (review of reviews(); track review.reviewId) {
+      <mat-card class="review-card">
+        <div class="review-header">
+          <span class="review-author">
+            {{ review.authorName }}
+            <span class="review-author-type">({{ review.authorType }})</span>
+          </span>
+          <span class="review-stars">
+            @for (star of stars; track star) {
+            <mat-icon>{{ review.rating >= star ? 'star' : 'star_border' }}</mat-icon>
+            }
+          </span>
+        </div>
+        <p class="review-comment">{{ review.comment }}</p>
+        <p class="review-date">{{ review.date | date: 'dd.MM.yyyy.' }}</p>
+      </mat-card>
+      }
+    </div>
+
+    @if (isLoggedIn) {
+    <mat-card class="add-review-card">
+      <h3>Dodaj recenziju</h3>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Recenziju ostavlja</mat-label>
+        <mat-select [ngModel]="newReviewAuthorType()" (ngModelChange)="newReviewAuthorType.set($event)">
+          <mat-option value="roditelj">Roditelj</mat-option>
+          <mat-option value="dete">Dete</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="rating-picker">
+        <span>Ocena:</span>
+        @for (star of stars; track star) {
+        <mat-icon class="star" (click)="setNewReviewRating(star)">
+          {{ newReviewRating() >= star ? 'star' : 'star_border' }}
+        </mat-icon>
+        }
+      </div>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Komentar</mat-label>
+        <textarea
+          matInput
+          rows="3"
+          [ngModel]="newReviewComment()"
+          (ngModelChange)="newReviewComment.set($event)"
+        ></textarea>
+      </mat-form-field>
+
+      @if (reviewError()) {
+      <p class="error">{{ reviewError() }}</p>
+      }
+
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="onSubmitReview()"
+        [disabled]="submittingReview()"
+      >
+        {{ submittingReview() ? 'Slanje...' : 'Pošalji recenziju' }}
+      </button>
+    </mat-card>
+    } @else {
+    <p class="login-prompt">
+      <a routerLink="/login">Prijavite se</a> da biste ostavili recenziju.
+    </p>
+    }
+  </section>
+  }
+</div>

@@ -87,6 +87,7 @@
 .toy-card {
   display: flex;
   flex-direction: column;
+  cursor: pointer;
 }
 
 .toy-card img {

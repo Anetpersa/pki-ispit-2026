@@ -1,4 +1,5 @@
 import { Component, OnInit, computed, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,10 +11,12 @@ import { ToyModel } from '../../../models/toy.model';
 import { AgeGroupModel } from '../../../models/age-group.model';
 import { ToyTypeModel } from '../../../models/toy-type.model';
 import { ToyService } from '../../../services/toy.service';
+import { ReviewService } from '../../../services/review.service';
 
 @Component({
   selector: 'app-catalog',
   imports: [
+    RouterLink,
     MatCardModule,
     MatCheckboxModule,
     MatFormFieldModule,
@@ -42,6 +45,7 @@ export class Catalog implements OnInit {
   ];
 
   searchTerm = signal('');
+  reviewSearchTerm = signal('');
   selectedTypeIds = signal<Set<number>>(new Set());
   selectedAgeGroupIds = signal<Set<number>>(new Set());
   selectedTargetGroup = signal<string>('');
@@ -52,6 +56,8 @@ export class Catalog implements OnInit {
 
   filteredToys = computed(() => {
     const search = this.searchTerm().trim().toLowerCase();
+    const reviewSearch = this.reviewSearchTerm().trim();
+    const reviewToyIds = reviewSearch ? ReviewService.findToyIdsByReviewText(reviewSearch) : null;
     const typeIds = this.selectedTypeIds();
     const ageIds = this.selectedAgeGroupIds();
     const target = this.selectedTargetGroup();
@@ -66,6 +72,9 @@ export class Catalog implements OnInit {
         !toy.name.toLowerCase().includes(search) &&
         !toy.description.toLowerCase().includes(search)
       ) {
+        return false;
+      }
+      if (reviewToyIds && !reviewToyIds.has(toy.toyId)) {
         return false;
       }
       if (typeIds.size > 0 && !typeIds.has(toy.type.typeId)) {
@@ -147,6 +156,7 @@ export class Catalog implements OnInit {
 
   clearFilters() {
     this.searchTerm.set('');
+    this.reviewSearchTerm.set('');
     this.selectedTypeIds.set(new Set());
     this.selectedAgeGroupIds.set(new Set());
     this.selectedTargetGroup.set('');
